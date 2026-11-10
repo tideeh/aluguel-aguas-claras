@@ -1,0 +1,103 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: API de marcações (favoritos, ocultos e notas) do site Aluguéis em Águas Claras
+
+Parameters:
+  OrigemPermitida:
+    Type: String
+    Default: https://tideeh.github.io
+    Description: Origem do site autorizada pelo CORS
+  ConcorrenciaReservada:
+    Type: Number
+    Default: 0
+    MinValue: 0
+    Description: Limite de execuções simultâneas da função (0 = sem reserva; contas novas costumam não ter cota para reservar)
+
+Conditions:
+  LimitarConcorrencia: !Not [!Equals [!Ref ConcorrenciaReservada, 0]]
+
+Resources:
+  # Capacidade provisionada dentro da cota gratuita: custo zero e, se houver abuso, limitação em vez de cobrança.
+  Marcas:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      TableName: aluguel-aguas-claras-marcas
+      BillingMode: PROVISIONED
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      AttributeDefinitions:
+        - AttributeName: pk
+          AttributeType: S
+        - AttributeName: sk
+          AttributeType: S
+      KeySchema:
+        - AttributeName: pk
+          KeyType: HASH
+        - AttributeName: sk
+          KeyType: RANGE
+
+  Logs:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/lambda/aluguel-aguas-claras-api
+      RetentionInDays: 7
+
+  Api:
+    Type: AWS::Serverless::Function
+    DependsOn: Logs
+    Properties:
+      FunctionName: aluguel-aguas-claras-api
+      Description: Favoritos, ocultos e notas do site Aluguéis em Águas Claras
+      Runtime: nodejs22.x
+      Architectures: [arm64]
+      MemorySize: 128
+      Timeout: 5
+      Handler: index.handler
+      CodeUri: src/
+      PermissionsBoundary: !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:policy/aluguel-aguas-claras-limite
+      ReservedConcurrentExecutions: !If [LimitarConcorrencia, !Ref ConcorrenciaReservada, !Ref AWS::NoValue]
+      Environment:
+        Variables:
+          TABELA: !Ref Marcas
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action: [dynamodb:Query, dynamodb:PutItem, dynamodb:DeleteItem]
+              Resource: !GetAtt Marcas.Arn
+
+  ApiUrl:
+    Type: AWS::Lambda::Url
+    Properties:
+      TargetFunctionArn: !Ref Api
+      AuthType: NONE
+      Cors:
+        AllowOrigins: [!Ref OrigemPermitida]
+        AllowMethods: [GET, PUT, DELETE]
+        AllowHeaders: [authorization, content-type]
+        MaxAge: 86400
+
+  # Desde outubro de 2025, URLs públicas exigem as duas permissões.
+  PermissaoUrl:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref Api
+      Action: lambda:InvokeFunctionUrl
+      Principal: '*'
+      FunctionUrlAuthType: NONE
+
+  PermissaoInvocacaoViaUrl:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref Api
+      Action: lambda:InvokeFunction
+      Principal: '*'
+      InvokedViaFunctionUrl: true
+
+Outputs:
+  ApiUrl:
+    Description: Endereço público da API
+    Value: !GetAtt ApiUrl.FunctionUrl
