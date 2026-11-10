@@ -4,730 +4,143 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Aluguéis em Águas Claras</title>
-<meta name="description" content="Apartamentos para alugar em Águas Claras Norte e Sul, de R$ 2.500 a R$ 4.500, coletados do DFimóveis todos os dias.">
+<meta name="description" content="Apartamentos de 2 quartos ou mais para alugar em Águas Claras Norte e Sul, de R$ 2.500 a R$ 4.500, coletados do DFimóveis todos os dias.">
 <meta name="robots" content="noindex">
 <meta name="referrer" content="no-referrer">
 <meta name="color-scheme" content="light dark">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230B5D73'/%3E%3Cpath d='M9 25V9h8v16M17 25V14h6v11M7 25h18' fill='none' stroke='white' stroke-width='2' stroke-linejoin='round'/%3E%3Cpath d='M12 13h2M12 17h2M12 21h2M19.5 18h1M19.5 21.5h1' stroke='white' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#F5F7F4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E1413" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230D6C76'/%3E%3Cpath d='M8 25V8h7v17M15 25V13h9v12' fill='none' stroke='white' stroke-width='2.2' stroke-linejoin='round'/%3E%3Ccircle cx='23' cy='8' r='2.6' fill='%23E5A600'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap">
-<style>
-/* Layout: ficha de locação — cabeçalho com a busca monitorada, barra de filtros, lista densa em linhas que viram cartões no celular */
-:root {
-  --bg: #F2F4F2;
-  --surface: #FFFFFF;
-  --ink: #131B18;
-  --muted: #59665F;
-  --line: #DCE2DE;
-  --line-strong: #C3CCC7;
-  --accent: #0B5D73;
-  --accent-soft: #E0EFF3;
-  --good: #22713A;
-  --good-soft: #E1F1E6;
-  --warn: #8F5500;
-  --warn-soft: #FAEDD6;
-  --bad: #9E261C;
-  --bad-soft: #F7E2DF;
-  --star: #B07418;
-  --note-bg: #F6F1E4;
-  --font: "Archivo", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --r: 8px;
-  color-scheme: light;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0D1311; --surface: #141C19; --ink: #E4EBE7; --muted: #96A39D; --line: #232E2A; --line-strong: #33403B;
-    --accent: #6CC4D9; --accent-soft: #10303A;
-    --good: #6BC884; --good-soft: #12301C; --warn: #E3AC52; --warn-soft: #33270F; --bad: #EF897D; --bad-soft: #391814;
-    --star: #E8B34A; --note-bg: #2A2618; color-scheme: dark;
-  }
-}
-
-* { box-sizing: border-box; }
-[hidden] { display: none !important; }
-html { -webkit-text-size-adjust: 100%; }
-body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 15px; line-height: 1.45; -webkit-font-smoothing: antialiased; }
-body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
-.wrap { max-width: 1080px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: calc(28px + env(safe-area-inset-top, 0px)) calc(56px + env(safe-area-inset-bottom, 0px)); }
-button, input, select, textarea { font: inherit; color: inherit; }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
-.num { font-variant-numeric: tabular-nums; }
-
-/* Cabeçalho */
-.topo { display: grid; gap: 10px; padding-bottom: 18px; }
-.eyebrow { margin: 0; font-size: 12px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); }
-h1 { margin: 0; font-stretch: 118%; font-weight: 760; font-size: clamp(1.7rem, 4vw, 2.45rem); line-height: 1.05; letter-spacing: -.01em; text-wrap: balance; }
-.ficha { display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 0; padding: 0; list-style: none; }
-.ficha li { font-size: 13px; padding: 3px 9px; border: 1px solid var(--line-strong); border-radius: 999px; color: var(--muted); background: var(--surface); }
-.ficha a { color: var(--accent); text-decoration: none; }
-.ficha a:hover { text-decoration: underline; }
-.status { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; font-size: 14px; color: var(--muted); }
-.status strong { color: var(--ink); font-weight: 650; }
-.alerta { margin: 4px 0 0; padding: 10px 12px; border-radius: var(--r); background: var(--warn-soft); color: var(--warn); font-size: 14px; }
-.delta { display: inline-flex; flex-wrap: wrap; gap: 0 10px; }
-.delta .mais { color: var(--good); }
-.delta .menos { color: var(--bad); }
-
-/* Sincronização */
-.sync { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; font-size: 14px; color: var(--muted); }
-.sync .estado { display: inline-flex; align-items: center; gap: 6px; }
-.sync .ponto { width: 8px; height: 8px; border-radius: 50%; background: var(--line-strong); flex: none; }
-.sync[data-estado="ok"] .ponto { background: var(--good); }
-.sync[data-estado="erro"] .ponto { background: var(--bad); }
-.sync[data-estado="carregando"] .ponto { background: var(--warn); }
-.link-btn { padding: 4px 0; border: 0; background: transparent; color: var(--accent); cursor: pointer; font-size: 14px; font-weight: 600; }
-.link-btn:hover { text-decoration: underline; }
-.sync-link { display: grid; gap: 6px; max-width: 640px; font-size: 13px; color: var(--muted); }
-.sync-link input { width: 100%; height: 34px; padding: 0 10px; border: 1px solid var(--line-strong); border-radius: 6px; background: var(--surface); font-size: 13px; }
-
-/* Barra de filtros */
-.barra { background: var(--bg); border-bottom: 1px solid var(--line); padding-block: 10px 12px; display: grid; gap: 10px; }
-@media (min-width: 641px) { .barra { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; } }
-.vistas { display: flex; flex-wrap: wrap; gap: 4px; margin: 0 -2px; padding: 2px; }
-.vista { flex: none; display: inline-flex; align-items: baseline; gap: 7px; padding: 7px 12px; border: 1px solid transparent; border-radius: 999px; background: transparent; cursor: pointer; font-weight: 600; font-size: 14px; color: var(--muted); }
-.vista:hover { color: var(--ink); background: var(--surface); border-color: var(--line); }
-.vista[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
-.vista .c { font-variant-numeric: tabular-nums; font-weight: 500; opacity: .8; font-size: 13px; }
-.filtros { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-.campo { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
-.campo select, .campo input { height: 34px; padding: 0 10px; border: 1px solid var(--line-strong); border-radius: 6px; background: var(--surface); font-size: 14px; color: var(--ink); }
-.campo input[type="number"] { width: 108px; }
-.busca { flex: 1 1 200px; min-width: 0; }
-.busca input { width: 100%; height: 34px; padding: 0 10px; border: 1px solid var(--line-strong); border-radius: 6px; background: var(--surface); font-size: 14px; }
-.seg { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 6px; overflow: hidden; background: var(--surface); }
-.seg button { height: 32px; padding: 0 11px; border: 0; background: transparent; cursor: pointer; font-size: 14px; color: var(--muted); }
-.seg button + button { border-left: 1px solid var(--line); }
-.seg button[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); font-weight: 650; }
-.limpar { height: 34px; padding: 0 10px; border: 0; background: transparent; color: var(--accent); cursor: pointer; font-size: 14px; }
-.limpar:hover { text-decoration: underline; }
-
-/* Lista */
-.contagem { margin: 14px 0 6px; font-size: 13px; color: var(--muted); }
-.lista { list-style: none; margin: 0; padding: 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); }
-.imovel { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "end preco" "tit preco" "spec acoes" "anot anot" "editor editor"; gap: 2px 20px; padding: 14px 16px; border-top: 1px solid var(--line); }
-.imovel:first-child { border-top: 0; }
-.imovel.saiu { opacity: .62; }
-.end { grid-area: end; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; min-width: 0; }
-.rua { font-weight: 680; font-size: 16px; font-stretch: 104%; }
-.bairro { font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
-.tit { grid-area: tit; min-width: 0; margin: 0; color: var(--muted); font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.spec { grid-area: spec; display: flex; flex-wrap: wrap; gap: 2px 12px; margin-top: 6px; font-size: 13.5px; min-width: 0; }
-.spec .anun { color: var(--muted); }
-.preco { grid-area: preco; text-align: right; display: grid; align-content: start; gap: 1px; }
-.total { font-stretch: 112%; font-weight: 740; font-size: 20px; font-variant-numeric: tabular-nums; line-height: 1.15; }
-.comp { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
-.acoes { grid-area: acoes; display: flex; justify-content: flex-end; align-items: center; gap: 2px; margin-top: 6px; }
-.ic { width: 34px; height: 34px; display: inline-grid; place-items: center; border: 0; border-radius: 6px; background: transparent; color: var(--muted); cursor: pointer; }
-.ic:hover { background: var(--bg); color: var(--ink); }
-.ic svg { width: 18px; height: 18px; }
-.ic[aria-pressed="true"].fav { color: var(--star); }
-.ic[aria-pressed="true"].oc { color: var(--bad); }
-.ic.tem-nota { color: var(--accent); }
-.abrir { display: inline-flex; align-items: center; gap: 5px; height: 34px; padding: 0 10px; border-radius: 6px; color: var(--accent); font-weight: 600; font-size: 14px; text-decoration: none; }
-.abrir:hover { background: var(--accent-soft); }
-.abrir svg { width: 14px; height: 14px; }
-.anotacao { grid-area: anot; margin: 8px 0 0; padding: 8px 10px; border-radius: 6px; background: var(--note-bg); font-size: 14px; white-space: pre-wrap; overflow-wrap: anywhere; }
-.editor { grid-area: editor; display: grid; gap: 8px; margin-top: 8px; }
-.editor textarea { width: 100%; min-height: 72px; padding: 8px 10px; border: 1px solid var(--line-strong); border-radius: 6px; background: var(--surface); font-size: 14px; resize: vertical; }
-.editor .botoes { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
-.btn { height: 32px; padding: 0 12px; border: 1px solid var(--line-strong); border-radius: 6px; background: var(--surface); cursor: pointer; font-size: 14px; font-weight: 600; }
-.btn.primario { background: var(--accent); border-color: var(--accent); color: var(--surface); }
-.tag { display: inline-block; font-size: 11.5px; font-weight: 650; letter-spacing: .03em; padding: 2px 7px; border-radius: 999px; white-space: nowrap; }
-.tag.novo { background: var(--accent-soft); color: var(--accent); }
-.tag.desce { background: var(--good-soft); color: var(--good); }
-.tag.sobe { background: var(--warn-soft); color: var(--warn); }
-.tag.saiu { background: var(--bad-soft); color: var(--bad); }
-.tag.volta { background: var(--accent-soft); color: var(--accent); }
-.vazio { padding: 40px 20px; text-align: center; color: var(--muted); }
-.vazio strong { display: block; color: var(--ink); font-size: 16px; margin-bottom: 4px; }
-
-/* Histórico e rodapé */
-.hist { margin-top: 28px; display: grid; gap: 8px; }
-.hist h2 { margin: 0; font-size: 13px; font-weight: 650; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-.hist ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 13.5px; }
-.hist li { display: flex; flex-wrap: wrap; gap: 2px 12px; padding: 6px 0; border-bottom: 1px dashed var(--line); }
-.hist .q { font-variant-numeric: tabular-nums; min-width: 9.5em; color: var(--ink); font-weight: 600; }
-.hist .falha { color: var(--bad); }
-.nota { margin: 10px 0 0; font-size: 13px; color: var(--muted); max-width: 70ch; }
-.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); background: var(--ink); color: var(--bg); padding: 9px 14px; border-radius: 8px; font-size: 14px; z-index: 20; max-width: calc(100% - 32px); }
-
-@media (max-width: 640px) {
-  .imovel { grid-template-columns: minmax(0, 1fr); grid-template-areas: "end" "tit" "spec" "preco" "acoes" "anot" "editor"; }
-  .preco { text-align: left; margin-top: 8px; grid-auto-flow: column; justify-content: start; align-items: baseline; gap: 10px; }
-  .acoes { justify-content: flex-start; margin-left: -8px; }
-  .tit { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-}
-@media (prefers-reduced-motion: no-preference) {
-  .ic, .vista, .abrir { transition: background-color .12s, color .12s; }
-}
-</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wdth,wght@75..100,400..700&display=swap">
+<link rel="stylesheet" href="assets/estilo.css?v=3">
+<script src="assets/app.js?v=3" defer></script>
 </head>
 <body>
-<div class="wrap">
-  <header class="topo">
-    <p class="eyebrow">DFimóveis · busca monitorada</p>
-    <h1>Aluguéis em Águas Claras</h1>
-    <ul class="ficha">
-      <li>Apartamento</li>
-      <li>Águas Claras Norte e Sul</li>
-      <li class="num">R$ 2.500 a R$ 4.500</li>
-      <li><a href="https://www.dfimoveis.com.br/aluguel/df/aguas-claras/norte,sul/apartamento?valorinicial=2500&amp;valorfinal=4500" target="_blank" rel="noopener noreferrer">Ver busca no site</a></li>
-    </ul>
-    <div class="status" id="status"><span>Carregando…</span></div>
-    <p class="alerta" id="alerta" hidden></p>
-    <div class="sync" id="sync" data-estado="local" hidden>
-      <span class="estado"><span class="ponto" aria-hidden="true"></span><span id="sync-texto"></span></span>
-      <button type="button" class="link-btn" id="sync-ativar" hidden>Sincronizar entre aparelhos</button>
-      <button type="button" class="link-btn" id="sync-copiar" hidden>Copiar link para outro aparelho</button>
-      <button type="button" class="link-btn" id="sync-tentar" hidden>Tentar de novo</button>
-      <button type="button" class="link-btn" id="sync-sair" hidden>Desativar neste aparelho</button>
-    </div>
-    <div class="sync-link" id="sync-link" hidden>
-      <label for="sync-link-campo">Abra este link no outro aparelho. Quem tiver o link vê e altera as marcações, então envie só para quem vai usar.</label>
-      <input id="sync-link-campo" type="text" readonly>
-    </div>
-  </header>
-
-  <div class="barra">
-    <div class="vistas" role="group" aria-label="Mostrar">
-      <button class="vista" type="button" data-vista="disp" aria-pressed="true">Disponíveis <span class="c" data-conta="disp">—</span></button>
-      <button class="vista" type="button" data-vista="novos" aria-pressed="false">Novos <span class="c" data-conta="novos">—</span></button>
-      <button class="vista" type="button" data-vista="fav" aria-pressed="false">Favoritos <span class="c" data-conta="fav">—</span></button>
-      <button class="vista" type="button" data-vista="notas" aria-pressed="false">Com nota <span class="c" data-conta="notas">—</span></button>
-      <button class="vista" type="button" data-vista="sairam" aria-pressed="false">Saíram <span class="c" data-conta="sairam">—</span></button>
-      <button class="vista" type="button" data-vista="ocultos" aria-pressed="false">Ocultos <span class="c" data-conta="ocultos">—</span></button>
-    </div>
-    <div class="filtros">
-      <div class="seg" role="group" aria-label="Bairro">
-        <button type="button" data-bairro="" aria-pressed="true">Todos</button>
-        <button type="button" data-bairro="N" aria-pressed="false">Norte</button>
-        <button type="button" data-bairro="S" aria-pressed="false">Sul</button>
-      </div>
-      <label class="campo">Quartos
-        <select id="f-quartos">
-          <option value="0">Qualquer</option>
-          <option value="1">1 ou mais</option>
-          <option value="2">2 ou mais</option>
-          <option value="3">3 ou mais</option>
-        </select>
-      </label>
-      <label class="campo">Vagas
-        <select id="f-vagas">
-          <option value="0">Qualquer</option>
-          <option value="1">1 ou mais</option>
-          <option value="2">2 ou mais</option>
-        </select>
-      </label>
-      <label class="campo">Total até
-        <input id="f-total" type="number" inputmode="numeric" min="0" step="100" placeholder="R$">
-      </label>
-      <label class="campo">Ordem
-        <select id="f-ordem">
-          <option value="total">Menor total</option>
-          <option value="aluguel">Menor aluguel</option>
-          <option value="area">Maior área</option>
-          <option value="m2">Menor R$/m²</option>
-          <option value="recentes">Anunciados há menos tempo</option>
-        </select>
-      </label>
-      <label class="busca" for="f-busca"><input id="f-busca" type="search" placeholder="Buscar rua, prédio, imobiliária ou nota" aria-label="Buscar rua, prédio, imobiliária ou nota"></label>
-      <button class="limpar" type="button" id="limpar">Limpar filtros</button>
-    </div>
+<header class="topo">
+  <div class="largura topo-in">
+    <a class="marca" href="./">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#0D6C76"/><path d="M8 25V8h7v17M15 25V13h9v12" fill="none" stroke="#fff" stroke-width="2.2" stroke-linejoin="round"/><circle cx="23" cy="8" r="2.6" fill="#E5A600"/></svg>
+      <span>Aluguéis em Águas Claras</span>
+    </a>
+    <button type="button" class="sync-btn" id="sync-btn" data-estado="local" hidden>
+      <span class="sync-ponto" aria-hidden="true"></span><span id="sync-rotulo">Sincronizar</span>
+    </button>
   </div>
+</header>
 
-  <p class="contagem" id="contagem" aria-live="polite"></p>
-  <ol class="lista" id="lista">
-    <li class="vazio"><strong>Carregando a lista</strong>Só um instante.</li>
-  </ol>
-
-  <section class="hist" aria-labelledby="hist-t">
-    <h2 id="hist-t">Últimas coletas</h2>
-    <ol id="hist-lista"><li>Nenhuma coleta registrada ainda.</li></ol>
-    <p class="nota">Dados coletados automaticamente do DFimóveis uma vez por dia; confira valores e disponibilidade no anúncio original. Total = aluguel + condomínio informado no anúncio. IPTU fica de fora porque cada anunciante informa de um jeito (mensal ou anual). Quando o anúncio diz "condomínio a consultar", o valor mostrado é só o aluguel; para ordenar e filtrar por total, esses anúncios entram com o condomínio mediano da lista. Favoritos, ocultos e notas ficam neste navegador; com a sincronização ativa, valem em todos os aparelhos que abrirem o link.</p>
+<main class="largura">
+  <section class="abertura">
+    <h1 class="manchete" id="manchete">Carregando os apartamentos…</h1>
+    <p class="criterios">Apartamentos de 2 quartos ou mais, com aluguel de R$ 2.500 a R$ 4.500, em Águas Claras Norte e Sul, anunciados no <a href="https://www.dfimoveis.com.br/aluguel/df/aguas-claras/norte,sul/apartamento/2-quartos,3-quartos,4-quartos?valorinicial=2500&amp;valorfinal=4500" target="_blank" rel="noopener noreferrer">DFimóveis</a>.</p>
+    <p class="status" id="status" aria-live="polite"></p>
+    <p class="alerta" id="alerta" hidden></p>
+    <figure class="faixa" id="faixa" hidden>
+      <svg id="faixa-svg" role="slider" tabindex="0" aria-label="Limite de total por mês. Use as setas para ajustar." aria-describedby="faixa-leg"></svg>
+      <figcaption id="faixa-leg"></figcaption>
+    </figure>
   </section>
-</div>
+
+  <section class="controles" aria-label="Filtros">
+    <label class="busca">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="f-busca" type="search" placeholder="Rua, prédio, imobiliária ou nota" aria-label="Buscar por rua, prédio, imobiliária ou nota">
+    </label>
+    <div class="filtros">
+      <div class="grupo" role="group" aria-labelledby="r-bairro">
+        <span class="rotulo" id="r-bairro">Bairro</span>
+        <button type="button" data-bairro="">Todos</button>
+        <button type="button" data-bairro="N">Norte</button>
+        <button type="button" data-bairro="S">Sul</button>
+      </div>
+      <div class="grupo" role="group" aria-labelledby="r-quartos">
+        <span class="rotulo" id="r-quartos">Quartos</span>
+        <button type="button" data-quartos="2">2 ou mais</button>
+        <button type="button" data-quartos="3">3 ou mais</button>
+        <button type="button" data-quartos="4">4 ou mais</button>
+      </div>
+      <div class="grupo" role="group" aria-labelledby="r-vagas">
+        <span class="rotulo" id="r-vagas">Vagas</span>
+        <button type="button" data-vagas="0">Qualquer</button>
+        <button type="button" data-vagas="1">1 ou mais</button>
+        <button type="button" data-vagas="2">2 ou mais</button>
+      </div>
+      <label class="campo">Total até R$ <input id="f-max" type="text" inputmode="numeric" maxlength="6" placeholder="sem limite"></label>
+      <button class="limpar" type="button" id="limpar" hidden>Limpar filtros</button>
+    </div>
+  </section>
+
+  <nav class="abas" aria-label="Listas">
+    <button type="button" data-vista="disp">Disponíveis <span class="c" data-conta="disp"></span></button>
+    <button type="button" data-vista="novos">Novos <span class="c" data-conta="novos"></span></button>
+    <button type="button" data-vista="fav">Favoritos <span class="c" data-conta="fav"></span></button>
+    <button type="button" data-vista="notas">Com nota <span class="c" data-conta="notas"></span></button>
+    <button type="button" data-vista="sairam">Saíram <span class="c" data-conta="sairam"></span></button>
+    <button type="button" data-vista="ocultos">Ocultos <span class="c" data-conta="ocultos"></span></button>
+  </nav>
+
+  <div class="lista-topo">
+    <p class="contagem" id="contagem" aria-live="polite"></p>
+    <label class="campo">Ordenar por
+      <select id="f-ordem">
+        <option value="total">Menor total</option>
+        <option value="aluguel">Menor aluguel</option>
+        <option value="area">Maior área</option>
+        <option value="m2">Menor preço por m²</option>
+        <option value="recentes">Anúncio mais recente</option>
+      </select>
+    </label>
+  </div>
+  <ul class="grade" id="grade"></ul>
+</main>
+
+<footer class="rodape largura">
+  <details class="coletas">
+    <summary>Últimas coletas</summary>
+    <ol id="hist"></ol>
+  </details>
+  <p>Dados do DFimóveis, coletados automaticamente uma vez por dia. Confira valor e disponibilidade no anúncio original. O total por mês soma aluguel e condomínio; o IPTU fica de fora porque cada anunciante informa de um jeito. Quando o condomínio é "a consultar", a ordenação, o limite e o gráfico usam o condomínio mediano da lista.</p>
+  <p>Favoritos, ocultos e notas ficam neste navegador. Com a sincronização ativa, valem em todos os aparelhos que abrirem o link.</p>
+</footer>
+
+<dialog id="dlg-nota" aria-labelledby="dn-titulo">
+  <form method="dialog" class="dlg">
+    <h2 id="dn-titulo">Nota</h2>
+    <p class="dlg-sub" id="dn-sub"></p>
+    <textarea id="dn-texto" maxlength="500" aria-labelledby="dn-titulo" placeholder="Ex.: liguei para o corretor, visita sábado às 10h"></textarea>
+    <p class="dlg-ajuda" id="dn-conta"></p>
+    <div class="dlg-acoes">
+      <button class="btn-texto perigo" value="apagar" id="dn-apagar">Apagar nota</button>
+      <span class="espaco"></span>
+      <button class="btn" value="cancelar">Cancelar</button>
+      <button class="btn primario" value="salvar">Salvar nota</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="dlg-sync" aria-labelledby="ds-titulo">
+  <form method="dialog" class="dlg">
+    <h2 id="ds-titulo">Sincronizar entre aparelhos</h2>
+    <div id="ds-local">
+      <p class="dlg-sub">Favoritos, ocultos e notas estão só neste navegador. Ative a sincronização para usar as mesmas marcações no celular e com outra pessoa.</p>
+    </div>
+    <div id="ds-ativo" class="dlg-bloco" hidden>
+      <p class="dlg-sub" id="ds-estado"></p>
+      <label for="ds-link">Link para abrir no outro aparelho</label>
+      <div class="linha-link"><input id="ds-link" type="text" readonly><button type="button" class="btn" id="ds-copiar">Copiar</button></div>
+      <p class="dlg-ajuda">Quem tiver o link vê e altera as marcações. Envie só para quem vai usar.</p>
+    </div>
+    <div class="dlg-acoes">
+      <button type="button" class="btn-texto perigo" id="ds-desativar" hidden>Desativar neste aparelho</button>
+      <span class="espaco"></span>
+      <button type="button" class="btn" id="ds-tentar" hidden>Tentar de novo</button>
+      <button class="btn" value="fechar">Fechar</button>
+      <button type="button" class="btn primario" id="ds-ativar">Ativar sincronização</button>
+    </div>
+  </form>
+</dialog>
+
 <div class="toast" id="toast" role="status" hidden></div>
-
-<script>
-(() => {
-  'use strict';
-  const TZ = 'America/Sao_Paulo';
-  const CHAVE_FILTROS = 'aguas-claras.filtros.v1';
-  const CHAVE_MARCAS = 'aguas-claras.marcas.v1';
-  const CHAVE_SYNC = 'aguas-claras.chave.v1';
-  const CHAVE_UNIAO = 'aguas-claras.uniao.v1';
-  const CHAVE_VALIDA = /^[A-Za-z0-9_-]{43}$/;
-  const MAX_NOTA = 500;
-  const PADRAO = { vista: 'disp', bairro: '', quartos: 0, vagas: 0, total: '', ordem: 'total', busca: '' };
-  const ICONES = {
-    estrela: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>',
-    estrelaCheia: '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>',
-    ocultar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 6.1A9.6 9.6 0 0 1 12 6c5 0 8.5 4.3 9.5 6-.5.9-1.6 2.4-3.1 3.7M6.6 7.6C4.6 8.9 3.2 10.8 2.5 12c1 1.7 4.5 6 9.5 6 1.6 0 3-.4 4.3-1.1"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>',
-    nota: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg>',
-    externo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>'
-  };
-
-  const ler = (k, padrao) => { try { const v = JSON.parse(localStorage.getItem(k) || 'null'); return v == null ? padrao : v; } catch (e) { return padrao; } };
-  const gravar = (k, v) => { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } };
-
-  const st = {
-    dados: null, execs: [], marcas: {}, carregado: false, lento: false, erro: null, f: { ...PADRAO },
-    editando: null, rascunho: '',
-    sync: { api: null, chave: null, estado: 'local', ultima: 0, mostrarLink: false }
-  };
-  { const s = ler(CHAVE_FILTROS, null); if (s && typeof s === 'object') st.f = { ...PADRAO, ...s }; }
-  { const m = ler(CHAVE_MARCAS, null); if (m && typeof m === 'object') st.marcas = m; }
-  { const c = ler(CHAVE_SYNC, null); if (typeof c === 'string' && CHAVE_VALIDA.test(c)) st.sync.chave = c; }
-
-  const $ = (s) => document.querySelector(s);
-  const hoje = () => new Date().toLocaleDateString('sv-SE', { timeZone: TZ });
-  const dias = (de, ate) => Math.round((Date.parse(ate + 'T12:00:00Z') - Date.parse(de + 'T12:00:00Z')) / 864e5);
-  const reais = (n) => 'R$ ' + Math.round(n).toLocaleString('pt-BR');
-  const ddmm = (iso) => { const [, m, d] = String(iso).slice(0, 10).split('-'); return d && m ? d + '/' + m : ''; };
-  const sem = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
-  const MINUSC = new Set(['DA', 'DAS', 'DE', 'DO', 'DOS', 'E']);
-  const caso = (s) => String(s || '').split(' ').map((w) => (w.length > 1 && w === w.toUpperCase() && /[A-ZÀ-Ý]/.test(w)) ? (MINUSC.has(w) ? w.toLowerCase() : w.charAt(0) + w.slice(1).toLowerCase()) : w).join(' ');
-  const plural = (n, um, varios) => n + ' ' + (n === 1 ? um : varios);
-
-  function quando(iso) {
-    const t = Date.parse(iso); if (!t) return '';
-    const dia = new Date(t).toLocaleDateString('sv-SE', { timeZone: TZ });
-    const hora = new Date(t).toLocaleTimeString('pt-BR', { timeZone: TZ, hour: '2-digit', minute: '2-digit' });
-    const d = dias(dia, hoje());
-    if (d === 0) return 'hoje às ' + hora;
-    if (d === 1) return 'ontem às ' + hora;
-    return ddmm(dia) + ' às ' + hora;
-  }
-  function idade(pu) {
-    if (!pu) return '';
-    const d = dias(pu, hoje());
-    if (d <= 0) return 'anunciado hoje';
-    if (d === 1) return 'anunciado ontem';
-    if (d > 365) return 'anunciado há mais de 1 ano';
-    return 'anunciado há ' + d + ' dias';
-  }
-
-  // ---------- Marcações (favorito, oculto, nota) ----------
-  const marcaVazia = (m) => !m || (!m.fav && !m.oculto && !m.nota);
-  const limparMarca = (m) => ({ fav: !!(m && m.fav), oculto: !!(m && m.oculto), nota: String((m && m.nota) || '').slice(0, MAX_NOTA) });
-  function normalizarMarcas(obj) {
-    const out = {};
-    for (const [id, m] of Object.entries(obj || {})) { if (/^\d+$/.test(id) && !marcaVazia(m)) out[id] = limparMarca(m); }
-    return out;
-  }
-
-  // ---------- Sincronização com a API ----------
-  function base64url(bytes) { let s = ''; bytes.forEach((b) => { s += String.fromCharCode(b); }); return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
-  function lerChaveDoLink() {
-    const m = location.hash.match(/(?:^#|&)chave=([A-Za-z0-9_-]{43})(?:&|$)/);
-    if (!m) return null;
-    history.replaceState(null, '', location.pathname + location.search);
-    return m[1];
-  }
-  async function api(metodo, caminho, corpo) {
-    const r = await fetch(st.sync.api + caminho, {
-      method: metodo, cache: 'no-store',
-      headers: corpo ? { authorization: 'Bearer ' + st.sync.chave, 'content-type': 'application/json' } : { authorization: 'Bearer ' + st.sync.chave },
-      body: corpo ? JSON.stringify(corpo) : undefined
-    });
-    if (!r.ok) { const e = new Error('HTTP ' + r.status); e.status = r.status; throw e; }
-    return r.json();
-  }
-  const uniaoFeita = () => { const u = ler(CHAVE_UNIAO, null); return u && u === st.sync.chave.slice(0, 8); };
-
-  async function sincronizar() {
-    if (!st.sync.api || !st.sync.chave) return;
-    st.sync.estado = 'carregando'; render();
-    try {
-      const { marcas } = await api('GET', '/marcas');
-      const servidor = normalizarMarcas(marcas);
-      if (!uniaoFeita()) {
-        // Primeira sincronização neste aparelho: o que só existia aqui sobe para o servidor.
-        for (const [id, m] of Object.entries(st.marcas)) {
-          if (servidor[id] || marcaVazia(m)) continue;
-          await api('PUT', '/marcas/' + id, limparMarca(m));
-          servidor[id] = limparMarca(m);
-        }
-        gravar(CHAVE_UNIAO, st.sync.chave.slice(0, 8));
-      }
-      st.marcas = servidor; gravar(CHAVE_MARCAS, st.marcas);
-      st.sync.estado = 'ok'; st.sync.ultima = Date.now();
-    } catch (e) {
-      st.sync.estado = 'erro';
-      if (e.status === 401) aviso('A chave de sincronização é inválida. Desative e ative de novo.');
-    }
-    render();
-  }
-
-  const filas = {};
-  function enviar(id, marca) {
-    if (!st.sync.api || !st.sync.chave || st.sync.estado === 'local') return;
-    filas[id] = (filas[id] || Promise.resolve()).then(async () => {
-      try {
-        if (marcaVazia(marca)) await api('DELETE', '/marcas/' + id);
-        else await api('PUT', '/marcas/' + id, limparMarca(marca));
-        if (st.sync.estado !== 'ok') { st.sync.estado = 'ok'; render(); }
-      } catch (e) {
-        aviso('Não foi possível salvar no servidor. A alteração ficou só neste aparelho; tente de novo.');
-        st.sync.estado = 'erro'; render();
-      }
-    });
-  }
-
-  function salvarMarca(id, nova) {
-    const marcas = { ...st.marcas };
-    if (marcaVazia(nova)) delete marcas[id]; else marcas[id] = limparMarca(nova);
-    st.marcas = marcas;
-    if (!gravar(CHAVE_MARCAS, marcas) && !st.sync.chave) aviso('Este navegador não permite guardar marcações nesta página.');
-    render();
-    enviar(id, nova);
-  }
-
-  async function ativarSync() {
-    if (!st.sync.api) return;
-    const bytes = new Uint8Array(32); crypto.getRandomValues(bytes);
-    st.sync.chave = base64url(bytes);
-    gravar(CHAVE_SYNC, st.sync.chave);
-    await sincronizar();
-    if (st.sync.estado === 'ok') { st.sync.mostrarLink = true; render(); aviso('Sincronização ativada. Use o link para abrir no celular ou enviar para a outra pessoa.'); }
-  }
-  function linkSync() { return location.origin + location.pathname + '#chave=' + st.sync.chave; }
-  async function copiarLink() {
-    const link = linkSync();
-    st.sync.mostrarLink = true; render();
-    try { await navigator.clipboard.writeText(link); aviso('Link copiado.'); }
-    catch (e) { const c = $('#sync-link-campo'); c.focus(); c.select(); aviso('Copie o link selecionado.'); }
-  }
-  function desativarSync() {
-    st.sync.chave = null; st.sync.estado = 'local'; st.sync.mostrarLink = false;
-    gravar(CHAVE_SYNC, null); gravar(CHAVE_UNIAO, null);
-    aviso('Sincronização desativada neste aparelho. As marcações continuam salvas aqui e no servidor.');
-    render();
-  }
-
-  // ---------- Dados ----------
-  function itens() {
-    const im = st.dados && st.dados.imoveis && typeof st.dados.imoveis === 'object' ? st.dados.imoveis : {};
-    const inicio = String((st.dados && st.dados.inicio) || '');
-    const h = hoje();
-    const conds = Object.values(im).map((x) => (x && x.c != null && x.c !== '' ? Number(x.c) : NaN)).filter((n) => n > 0).sort((a, b) => a - b);
-    const medCond = conds.length ? conds[Math.floor(conds.length / 2)] : 0;
-    const out = [];
-    for (const id of Object.keys(im)) {
-      const x = im[id];
-      if (!/^\d+$/.test(id) || !x || typeof x !== 'object') continue;
-      const p = Number(x.p) || 0, a = Number(x.a) || 0;
-      const c = x.c == null || x.c === '' ? null : Number(x.c);
-      const hist = x.h && typeof x.h === 'object' ? x.h : null;
-      let mud = null;
-      if (hist) { const k = Object.keys(hist).sort().pop(); if (k && dias(k, h) <= 14) mud = { em: k, de: Number(hist[k]) }; }
-      const m = st.marcas[id] || {};
-      out.push({
-        id, p, a, c, q: Number(x.q) || 0, s: Number(x.s) || 0, v: Number(x.v) || 0,
-        rua: caso(x.r), b: x.b === 'S' ? 'S' : 'N', t: String(x.t || ''), an: String(x.an || ''), pu: String(x.pu || ''),
-        d: String(x.d || ''), saiu: x.x ? String(x.x) : '', volta: x.rv ? String(x.rv) : '',
-        total: p + (c || 0), chave: p + (c != null ? c : medCond), m2: a ? p / a : Infinity, mud,
-        novo: !x.x && x.d && inicio && String(x.d) > inicio && dias(String(x.d), h) <= 7,
-        voltou: !x.x && x.rv && dias(String(x.rv), h) <= 7,
-        fav: !!m.fav, oculto: !!m.oculto, nota: String(m.nota || '')
-      });
-    }
-    return out;
-  }
-
-  function passaFiltros(x) {
-    const f = st.f;
-    if (f.bairro && x.b !== f.bairro) return false;
-    if (f.quartos && x.q < f.quartos) return false;
-    if (f.vagas && x.v < f.vagas) return false;
-    const max = Number(f.total);
-    if (f.total !== '' && max > 0 && x.chave > max) return false;
-    if (f.busca) {
-      const alvo = sem(x.rua + ' ' + (x.b === 'N' ? 'norte' : 'sul') + ' ' + x.t + ' ' + x.an + ' ' + x.nota);
-      if (!sem(f.busca).split(/\s+/).filter(Boolean).every((w) => alvo.includes(w))) return false;
-    }
-    return true;
-  }
-  const NA_VISTA = {
-    disp: (x) => !x.saiu && !x.oculto,
-    novos: (x) => !x.saiu && (x.novo || x.voltou),
-    fav: (x) => x.fav,
-    notas: (x) => !!x.nota,
-    sairam: (x) => !!x.saiu,
-    ocultos: (x) => x.oculto && !x.saiu
-  };
-  const ORDEM = {
-    total: (a, b) => a.chave - b.chave || a.p - b.p,
-    aluguel: (a, b) => a.p - b.p || a.chave - b.chave,
-    area: (a, b) => b.a - a.a || a.chave - b.chave,
-    m2: (a, b) => a.m2 - b.m2,
-    recentes: (a, b) => (b.pu > a.pu ? 1 : b.pu < a.pu ? -1 : a.chave - b.chave)
-  };
-
-  // ---------- Desenho ----------
-  function el(tag, cls, txt) { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
-  function botao(cls, acao, id, rotulo, icone, pressionado) {
-    const b = el('button', cls); b.type = 'button'; b.dataset.acao = acao; b.dataset.id = id;
-    if (pressionado != null) b.setAttribute('aria-pressed', String(pressionado));
-    b.setAttribute('aria-label', rotulo); b.title = rotulo; b.innerHTML = icone;
-    return b;
-  }
-
-  function linha(x) {
-    const li = el('li', 'imovel' + (x.saiu ? ' saiu' : ''));
-    li.dataset.id = x.id;
-    const end = el('div', 'end');
-    end.append(el('span', 'rua', x.rua || 'Endereço não informado'), el('span', 'bairro', x.b === 'N' ? 'Norte' : 'Sul'));
-    if (x.novo) end.append(el('span', 'tag novo', 'Novo · ' + ddmm(x.d)));
-    if (x.voltou) end.append(el('span', 'tag volta', 'Voltou · ' + ddmm(x.volta)));
-    if (x.mud && x.mud.de) end.append(el('span', 'tag ' + (x.p < x.mud.de ? 'desce' : 'sobe'), (x.p < x.mud.de ? 'Baixou' : 'Subiu') + ' · era ' + reais(x.mud.de)));
-    if (x.saiu) end.append(el('span', 'tag saiu', 'Saiu do site · ' + ddmm(x.saiu)));
-    li.append(end);
-    if (x.t) { const tit = el('p', 'tit', x.t); tit.title = x.t; li.append(tit); }
-    const spec = el('div', 'spec');
-    const partes = [plural(x.q, 'quarto', 'quartos')];
-    if (x.s) partes.push(plural(x.s, 'suíte', 'suítes'));
-    partes.push(x.v ? plural(x.v, 'vaga', 'vagas') : 'sem vaga');
-    if (x.a) partes.push(x.a + ' m²');
-    spec.append(el('span', 'num', partes.join(' · ')));
-    if (x.a) spec.append(el('span', 'num anun', reais(x.m2) + '/m²'));
-    if (x.an) spec.append(el('span', 'anun', x.an));
-    if (x.pu) spec.append(el('span', 'anun', idade(x.pu)));
-    li.append(spec);
-    const preco = el('div', 'preco');
-    preco.append(el('span', 'total', reais(x.c != null ? x.total : x.p)));
-    preco.append(el('span', 'comp', x.c != null ? reais(x.p) + ' + ' + reais(x.c) + ' cond.' : 'só aluguel · cond. a consultar'));
-    li.append(preco);
-    const ac = el('div', 'acoes');
-    const editando = st.editando === x.id;
-    const bn = botao('ic' + (x.nota ? ' tem-nota' : ''), 'nota', x.id, x.nota ? 'Editar nota' : 'Escrever nota', ICONES.nota, null);
-    bn.setAttribute('aria-expanded', String(editando));
-    ac.append(
-      bn,
-      botao('ic fav', 'fav', x.id, x.fav ? 'Tirar dos favoritos' : 'Favoritar', x.fav ? ICONES.estrelaCheia : ICONES.estrela, x.fav),
-      botao('ic oc', 'oculto', x.id, x.oculto ? 'Mostrar de novo' : 'Ocultar da lista', ICONES.ocultar, x.oculto)
-    );
-    const a = el('a', 'abrir'); a.href = 'https://www.dfimoveis.com.br/imovel/apartamento-' + x.id; a.target = '_blank'; a.rel = 'noopener noreferrer';
-    a.append(el('span', null, 'Abrir anúncio')); a.insertAdjacentHTML('beforeend', ICONES.externo);
-    ac.append(a);
-    li.append(ac);
-    if (x.nota && !editando) li.append(el('p', 'anotacao', x.nota));
-    if (editando) {
-      const ed = el('div', 'editor');
-      const ta = el('textarea'); ta.id = 'nota-' + x.id; ta.maxLength = MAX_NOTA; ta.value = st.rascunho;
-      ta.setAttribute('aria-label', 'Nota sobre este apartamento'); ta.placeholder = 'Ex.: liguei para o corretor, visita sábado às 10h';
-      const bt = el('div', 'botoes');
-      const salvar = el('button', 'btn primario', 'Salvar nota'); salvar.type = 'button'; salvar.dataset.acao = 'nota-salvar'; salvar.dataset.id = x.id;
-      const cancelar = el('button', 'btn', 'Cancelar'); cancelar.type = 'button'; cancelar.dataset.acao = 'nota-cancelar'; cancelar.dataset.id = x.id;
-      bt.append(salvar, cancelar, el('span', null, 'Até ' + MAX_NOTA + ' caracteres. Deixe vazio para apagar.'));
-      ed.append(ta, bt);
-      li.append(ed);
-    }
-    return li;
-  }
-
-  function vazio(titulo, texto) { const li = el('li', 'vazio'); li.append(el('strong', null, titulo), document.createTextNode(texto)); return li; }
-
-  const MSG_VAZIO = {
-    disp: ['Nenhum apartamento com esses filtros', 'Afrouxe algum filtro ou limpe a busca.'],
-    novos: ['Nenhum anúncio novo nos últimos 7 dias', 'Os anúncios que entrarem no site aparecem aqui depois da coleta diária.'],
-    fav: ['Nenhum favorito ainda', 'Use a estrela de um anúncio para guardá-lo aqui.'],
-    notas: ['Nenhuma nota ainda', 'Use o lápis de um anúncio para anotar contato, visita ou impressões.'],
-    sairam: ['Nenhum anúncio saiu do site recentemente', 'Anúncios removidos ficam aqui por 45 dias.'],
-    ocultos: ['Nenhum anúncio oculto', 'Oculte os que não interessam para limpar a lista principal.']
-  };
-
-  function desenhaStatus() {
-    const s = $('#status'); s.replaceChildren();
-    const alerta = $('#alerta'); alerta.hidden = true;
-    if (st.erro) { s.append(el('span', null, 'Não foi possível carregar os dados. Recarregue a página para tentar de novo.')); return; }
-    if (!st.dados) { s.append(el('span', null, st.lento ? 'Os dados estão demorando para chegar.' : 'Carregando…')); return; }
-    const d = st.dados;
-    const at = el('span'); at.append('Atualizado ', el('strong', null, quando(d.atualizadoEm) || '—')); s.append(at);
-    if (d.agenda) s.append(el('span', null, 'Coleta automática ' + String(d.agenda)));
-    const ult = st.execs[0];
-    if (ult && ult.ok) {
-      const dl = el('span', 'delta num');
-      const n = Array.isArray(ult.novos) ? ult.novos.length : 0, r = Array.isArray(ult.sairam) ? ult.sairam.length : 0, pr = Array.isArray(ult.precos) ? ult.precos.length : 0;
-      dl.append(el('span', 'mais', '+' + n + (n === 1 ? ' novo' : ' novos')), el('span', 'menos', '−' + r + (r === 1 ? ' saiu' : ' saíram')), el('span', null, plural(pr, 'preço mudou', 'preços mudaram')));
-      s.append(dl);
-    }
-    if (ult && ult.ok === false) { alerta.textContent = 'A coleta de ' + quando(ult.em) + ' não terminou: ' + String(ult.erro || 'motivo não informado') + '. A lista mostra os dados da última coleta completa.'; alerta.hidden = false; }
-    else if (d.atualizadoEm && (Date.now() - Date.parse(d.atualizadoEm)) > 36 * 3600e3) { alerta.textContent = 'A lista não é atualizada desde ' + quando(d.atualizadoEm) + '.'; alerta.hidden = false; }
-  }
-
-  function desenhaSync() {
-    const box = $('#sync');
-    box.hidden = !st.sync.api;
-    if (!st.sync.api) { $('#sync-link').hidden = true; return; }
-    const estado = st.sync.chave ? st.sync.estado : 'local';
-    box.dataset.estado = estado;
-    const TEXTOS = {
-      local: 'Favoritos, ocultos e notas estão só neste navegador.',
-      carregando: 'Sincronizando…',
-      ok: 'Sincronizado entre aparelhos.',
-      erro: 'Sem conexão com o servidor; as marcações deste aparelho continuam salvas.'
-    };
-    $('#sync-texto').textContent = TEXTOS[estado] || '';
-    $('#sync-ativar').hidden = !!st.sync.chave;
-    $('#sync-copiar').hidden = !st.sync.chave || estado === 'carregando';
-    $('#sync-tentar').hidden = estado !== 'erro';
-    $('#sync-sair').hidden = !st.sync.chave;
-    const caixa = $('#sync-link');
-    caixa.hidden = !(st.sync.chave && st.sync.mostrarLink);
-    if (!caixa.hidden) { const campo = $('#sync-link-campo'); const link = linkSync(); if (campo.value !== link) campo.value = link; }
-  }
-
-  function desenhaHistorico() {
-    const ol = $('#hist-lista'); ol.replaceChildren();
-    if (!st.execs.length) { ol.append(el('li', null, 'Nenhuma coleta registrada ainda.')); return; }
-    for (const e of st.execs.slice(0, 7)) {
-      const li = el('li');
-      li.append(el('span', 'q', quando(e.em)));
-      if (e.ok) {
-        const n = Array.isArray(e.novos) ? e.novos.length : 0, r = Array.isArray(e.sairam) ? e.sairam.length : 0, pr = Array.isArray(e.precos) ? e.precos.length : 0;
-        li.append(el('span', 'num', plural(Number(e.total) || 0, 'anúncio', 'anúncios')), el('span', 'num', plural(n, 'novo', 'novos') + ' · ' + r + (r === 1 ? ' saiu' : ' saíram') + ' · ' + plural(pr, 'preço', 'preços')));
-        if (e.nota) li.append(el('span', null, String(e.nota)));
-      } else {
-        li.append(el('span', 'falha', 'Falhou: ' + String(e.erro || 'motivo não informado')));
-      }
-      ol.append(li);
-    }
-  }
-
-  function sincronizaControles() {
-    const f = st.f;
-    document.querySelectorAll('[data-vista]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.vista === f.vista)));
-    document.querySelectorAll('[data-bairro]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.bairro === f.bairro)));
-    const q = $('#f-quartos'); if (q.value !== String(f.quartos)) q.value = String(f.quartos);
-    const v = $('#f-vagas'); if (v.value !== String(f.vagas)) v.value = String(f.vagas);
-    const o = $('#f-ordem'); if (o.value !== f.ordem) o.value = f.ordem;
-    const t = $('#f-total'); if (document.activeElement !== t && t.value !== String(f.total)) t.value = f.total;
-    const bu = $('#f-busca'); if (document.activeElement !== bu && bu.value !== f.busca) bu.value = f.busca;
-  }
-
-  let agendado = false;
-  function render() { if (agendado) return; agendado = true; requestAnimationFrame(() => { agendado = false; desenha(); }); }
-
-  function desenha() {
-    // Preserva o texto e o foco do editor de nota entre redesenhos.
-    const ta = st.editando ? document.getElementById('nota-' + st.editando) : null;
-    const focado = ta && document.activeElement === ta;
-    if (ta) st.rascunho = ta.value;
-    sincronizaControles();
-    desenhaStatus();
-    desenhaSync();
-    desenhaHistorico();
-    const lista = $('#lista');
-    if (!st.dados) {
-      lista.replaceChildren(st.erro ? vazio('Lista indisponível agora', 'Recarregue a página em instantes.') : vazio('Carregando a lista', st.lento ? 'Está demorando mais que o normal.' : 'Só um instante.'));
-      $('#contagem').textContent = '';
-      document.querySelectorAll('[data-conta]').forEach((e) => { e.textContent = '—'; });
-      return;
-    }
-    const todos = itens().filter(passaFiltros);
-    for (const k of Object.keys(NA_VISTA)) { const e = document.querySelector('[data-conta="' + k + '"]'); if (e) e.textContent = String(todos.filter(NA_VISTA[k]).length); }
-    const vista = NA_VISTA[st.f.vista] ? st.f.vista : 'disp';
-    const sel = todos.filter((x) => NA_VISTA[vista](x) || x.id === st.editando);
-    if (vista === 'novos') sel.sort((a, b) => ((b.volta || b.d) > (a.volta || a.d) ? 1 : (b.volta || b.d) < (a.volta || a.d) ? -1 : (ORDEM[st.f.ordem] || ORDEM.total)(a, b)));
-    else if (vista === 'sairam') sel.sort((a, b) => (b.saiu > a.saiu ? 1 : b.saiu < a.saiu ? -1 : a.total - b.total));
-    else sel.sort(ORDEM[st.f.ordem] || ORDEM.total);
-    const comCond = sel.filter((x) => x.c != null);
-    const media = comCond.length ? comCond.reduce((s, x) => s + x.total, 0) / comCond.length : 0;
-    $('#contagem').textContent = sel.length ? plural(sel.length, 'apartamento', 'apartamentos') + (media ? ' · total médio ' + reais(media) : '') : '';
-    const frag = document.createDocumentFragment();
-    if (!sel.length) frag.append(vazio(...MSG_VAZIO[vista]));
-    else sel.forEach((x) => frag.append(linha(x)));
-    lista.replaceChildren(frag);
-    if (focado) { const novo = document.getElementById('nota-' + st.editando); if (novo) { novo.focus(); novo.setSelectionRange(novo.value.length, novo.value.length); } }
-  }
-
-  function salvaFiltros() { gravar(CHAVE_FILTROS, st.f); }
-  function setF(patch) { st.f = { ...st.f, ...patch }; salvaFiltros(); render(); }
-
-  let toastT = null;
-  function aviso(txt) { const t = $('#toast'); t.textContent = txt; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, 4000); }
-
-  // ---------- Eventos ----------
-  document.querySelectorAll('[data-vista]').forEach((b) => b.addEventListener('click', () => setF({ vista: b.dataset.vista })));
-  document.querySelectorAll('[data-bairro]').forEach((b) => b.addEventListener('click', () => setF({ bairro: b.dataset.bairro })));
-  $('#f-quartos').addEventListener('change', (e) => setF({ quartos: Number(e.target.value) || 0 }));
-  $('#f-vagas').addEventListener('change', (e) => setF({ vagas: Number(e.target.value) || 0 }));
-  $('#f-ordem').addEventListener('change', (e) => setF({ ordem: e.target.value }));
-  let tBusca = null;
-  $('#f-busca').addEventListener('input', (e) => { clearTimeout(tBusca); const v = e.target.value; tBusca = setTimeout(() => setF({ busca: v }), 150); });
-  let tTotal = null;
-  $('#f-total').addEventListener('input', (e) => { clearTimeout(tTotal); const v = e.target.value; tTotal = setTimeout(() => setF({ total: v }), 250); });
-  $('#limpar').addEventListener('click', () => { st.f = { ...PADRAO, vista: st.f.vista }; $('#f-total').value = ''; $('#f-busca').value = ''; salvaFiltros(); render(); });
-  $('#sync-ativar').addEventListener('click', ativarSync);
-  $('#sync-copiar').addEventListener('click', copiarLink);
-  $('#sync-tentar').addEventListener('click', sincronizar);
-  $('#sync-sair').addEventListener('click', desativarSync);
-  $('#lista').addEventListener('click', (e) => {
-    const b = e.target.closest('button[data-acao]'); if (!b) return;
-    const id = b.dataset.id, atual = st.marcas[id] || {};
-    switch (b.dataset.acao) {
-      case 'fav': salvarMarca(id, { ...limparMarca(atual), fav: !atual.fav }); break;
-      case 'oculto': salvarMarca(id, { ...limparMarca(atual), oculto: !atual.oculto }); break;
-      case 'nota': st.editando = st.editando === id ? null : id; st.rascunho = String(atual.nota || ''); render(); requestAnimationFrame(() => { const ta = document.getElementById('nota-' + id); if (ta) ta.focus(); }); break;
-      case 'nota-salvar': {
-        const ta = document.getElementById('nota-' + id);
-        const texto = (ta ? ta.value : st.rascunho).replace(/\r\n?/g, '\n').trim().slice(0, MAX_NOTA);
-        st.editando = null; st.rascunho = '';
-        salvarMarca(id, { ...limparMarca(atual), nota: texto });
-        break;
-      }
-      case 'nota-cancelar': st.editando = null; st.rascunho = ''; render(); break;
-    }
-  });
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible' && st.sync.chave && st.sync.api && st.sync.estado !== 'carregando' && Date.now() - st.sync.ultima > 30000 && !st.editando) sincronizar();
-  });
-
-  // ---------- Carga ----------
-  async function carregar() {
-    const timer = setTimeout(() => { if (!st.dados) { st.lento = true; render(); } }, 10000);
-    try {
-      const t = Date.now();
-      const [r1, r2] = await Promise.all([
-        fetch('data/imoveis.json?t=' + t, { cache: 'no-store' }),
-        fetch('data/execucoes.json?t=' + t, { cache: 'no-store' })
-      ]);
-      if (!r1.ok) throw new Error('HTTP ' + r1.status);
-      st.dados = await r1.json();
-      try { const ex = r2.ok ? await r2.json() : []; st.execs = Array.isArray(ex) ? ex : []; } catch (e) { st.execs = []; }
-      st.carregado = true;
-    } catch (e) {
-      st.erro = e;
-    } finally {
-      clearTimeout(timer);
-      render();
-    }
-  }
-
-  async function carregarApi() {
-    try {
-      const r = await fetch('api.json?t=' + Date.now(), { cache: 'no-store' });
-      if (!r.ok) return;
-      const { url } = await r.json();
-      if (typeof url === 'string' && /^https:\/\/[a-z0-9.-]+(?::\d+)?\/?$/i.test(url)) st.sync.api = url.replace(/\/$/, '');
-    } catch (e) { /* sem API publicada: marcações ficam só no navegador */ }
-  }
-
-  const chaveDoLink = lerChaveDoLink();
-  if (chaveDoLink) {
-    if (st.sync.chave !== chaveDoLink) gravar(CHAVE_UNIAO, null);
-    st.sync.chave = chaveDoLink; gravar(CHAVE_SYNC, chaveDoLink);
-  }
-  render();
-  carregar();
-  carregarApi().then(() => {
-    if (st.sync.chave && st.sync.api) {
-      sincronizar().then(() => { if (chaveDoLink && st.sync.estado === 'ok') aviso('Aparelho conectado: marcações sincronizadas.'); });
-    } else render();
-  });
-})();
-</script>
 </body>
 </html>

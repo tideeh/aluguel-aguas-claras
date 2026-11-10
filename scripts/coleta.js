@@ -2,7 +2,7 @@
   const KNOWN = window.__KNOWN;
   if (!KNOWN || typeof KNOWN.a !== 'object' || typeof KNOWN.r !== 'object') return 'ERRO: window.__KNOWN ausente ou inválido';
   if (window.__rot && window.__rot.status === 'rodando') return 'ja-rodando';
-  const BASE = 'https://www.dfimoveis.com.br/aluguel/df/aguas-claras/norte,sul/apartamento?valorinicial=2500&valorfinal=4500&ordenamento=mais-recente';
+  const BASE = 'https://www.dfimoveis.com.br/aluguel/df/aguas-claras/norte,sul/apartamento/2-quartos,3-quartos,4-quartos?valorinicial=2500&valorfinal=4500&ordenamento=mais-recente';
   const TZ = 'America/Sao_Paulo';
   const HOJE = new Date().toLocaleDateString('sv-SE', { timeZone: TZ });
   const HHMM = new Date().toLocaleTimeString('pt-BR', { timeZone: TZ, hour: '2-digit', minute: '2-digit', hour12: false }).replace(':', '-');

@@ -1,12 +1,13 @@
 # Aluguéis em Águas Claras
 
-Site estático com os apartamentos para alugar em Águas Claras Norte e Sul (aluguel de R$ 2.500 a R$ 4.500) anunciados no [DFimóveis](https://www.dfimoveis.com.br/aluguel/df/aguas-claras/norte,sul/apartamento?valorinicial=2500&valorfinal=4500), atualizado uma vez por dia.
+Site estático com os apartamentos de 2 quartos ou mais para alugar em Águas Claras Norte e Sul (aluguel de R$ 2.500 a R$ 4.500) anunciados no [DFimóveis](https://www.dfimoveis.com.br/aluguel/df/aguas-claras/norte,sul/apartamento/2-quartos,3-quartos,4-quartos?valorinicial=2500&valorfinal=4500), atualizado uma vez por dia.
 
 ## Estrutura
 
 | Caminho | Conteúdo |
 | --- | --- |
-| `index.html` | Página única: lista, filtros, ordenação, favoritos e ocultos (guardados no navegador de cada visitante). |
+| `index.html` | Página única: resumo do dia, gráfico de preços (que também define o limite de total), filtros, abas e cartões. |
+| `assets/estilo.css`, `assets/app.js` | Visual (tema claro e escuro) e lógica da página: filtros, marcações (favorito, oculto, nota) e sincronização. |
 | `data/imoveis.json` | Estado atual. Um anúncio por linha, chave = id do DFimóveis. |
 | `data/execucoes.json` | Últimas 60 coletas (mais recente primeiro). |
 | `scripts/coleta.js` | Coleta executada no navegador, numa aba do DFimóveis. Lê a busca paginada, compara com o índice anterior e devolve o patch do dia. |
