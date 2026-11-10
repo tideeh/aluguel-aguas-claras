@@ -1,0 +1,71 @@
+name: Backend
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend.yml'
+  workflow_dispatch:
+
+permissions:
+  id-token: write   # OIDC com a AWS, sem chaves guardadas
+  contents: write   # publicar api.json com o endereço da API
+
+concurrency:
+  group: backend
+  cancel-in-progress: false
+
+env:
+  AWS_REGION: sa-east-1
+  STACK: aluguel-aguas-claras-api
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Testes
+        run: node --test backend/test/*.test.mjs
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - uses: aws-actions/setup-sam@v2
+        with:
+          use-installer: true
+
+      - name: Deploy
+        working-directory: backend
+        run: |
+          CONTA=$(aws sts get-caller-identity --query Account --output text)
+          sam deploy \
+            --template-file template.yaml \
+            --stack-name "$STACK" \
+            --s3-bucket "aluguel-aguas-claras-artefatos-$CONTA" \
+            --s3-prefix api \
+            --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND \
+            --no-confirm-changeset \
+            --no-fail-on-empty-changeset
+
+      - name: Publicar endereço da API no site
+        run: |
+          URL=$(aws cloudformation describe-stacks --stack-name "$STACK" \
+            --query "Stacks[0].Outputs[?OutputKey=='ApiUrl'].OutputValue" --output text)
+          case "$URL" in https://*) ;; *) echo "URL inesperada: $URL"; exit 1;; esac
+          printf '{"url":"%s"}\n' "${URL%/}" > api.json
+          if [ -n "$(git status --porcelain -- api.json)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add api.json
+            git commit -m "Atualiza endereço da API"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
