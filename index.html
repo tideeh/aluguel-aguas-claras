@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Aluguéis em Águas Claras</title>
+<meta name="description" content="Apartamentos para alugar em Águas Claras Norte e Sul, de R$ 2.500 a R$ 4.500, coletados do DFimóveis todos os dias.">
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230B5D73'/%3E%3Cpath d='M9 25V9h8v16M17 25V14h6v11M7 25h18' fill='none' stroke='white' stroke-width='2' stroke-linejoin='round'/%3E%3Cpath d='M12 13h2M12 17h2M12 21h2M19.5 18h1M19.5 21.5h1' stroke='white' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap">
+<style>
+/* Layout: ficha de locação — cabeçalho com a busca monitorada, barra de filtros, lista densa em linhas que viram cartões no celular */
+:root {
+  --bg: #F2F4F2;
+  --surface: #FFFFFF;
+  --ink: #131B18;
+  --muted: #59665F;
+  --line: #DCE2DE;
+  --line-strong: #C3CCC7;
+  --accent: #0B5D73;
+  --accent-soft: #E0EFF3;
+  --good: #22713A;
+  --good-soft: #E1F1E6;
+  --warn: #8F5500;
+  --warn-soft: #FAEDD6;
+  --bad: #9E261C;
+  --bad-soft: #F7E2DF;
+  --star: #B07418;
+  --font: "Archivo", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --r: 8px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0D1311; --surface: #141C19; --ink: #E4EBE7; --muted: #96A39D; --line: #232E2A; --line-strong: #33403B;
+    --accent: #6CC4D9; --accent-soft: #10303A;
+    --good: #6BC884; --good-soft: #12301C; --warn: #E3AC52; --warn-soft: #33270F; --bad: #EF897D; --bad-soft: #391814;
+    --star: #E8B34A; color-scheme: dark;
+  }
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 15px; line-height: 1.45; -webkit-font-smoothing: antialiased; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.wrap { max-width: 1080px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: calc(28px + env(safe-area-inset-top, 0px)) calc(56px + env(safe-area-inset-bottom, 0px)); }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.num { font-variant-numeric: tabular-nums; }
+
+/* Cabeçalho */
+.topo { display: grid; gap: 10px; padding-bottom: 18px; }
+.eyebrow { margin: 0; font-size: 12px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); }
+h1 { margin: 0; font-stretch: 118%; font-weight: 760; font-size: clamp(1.7rem, 4vw, 2.45rem); line-height: 1.05; letter-spacing: -.01em; text-wrap: balance; }
+.ficha { display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 0; padding: 0; list-style: none; }
+.ficha li { font-size: 13px; padding: 3px 9px; border: 1px solid var(--line-strong); border-radius: 999px; color: var(--muted); background: var(--surface); }
+.ficha a { color: var(--accent); text-decoration: none; }
+.ficha a:hover { text-decoration: underline; }
+.status { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; font-size: 14px; color: var(--muted); }
+.status strong { color: var(--ink); font-weight: 650; }
+.alerta { margin: 4px 0 0; padding: 10px 12px; border-radius: var(--r); background: var(--warn-soft); color: var(--warn); font-size: 14px; }
+.delta { display: inline-flex; flex-wrap: wrap; gap: 0 10px; }
+.delta .mais { color: var(--good); }
+.delta .menos { color: var(--bad); }
+
+/* Barra de filtros */
+.barra { background: var(--bg); border-bottom: 1px solid var(--line); padding-block: 10px 12px; display: grid; gap: 10px; }
+@media (min-width: 641px) { .barra { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; } }
+.vistas { display: flex; flex-wrap: wrap; gap: 4px; margin: 0 -2px; padding: 2px; }
+.vista { flex: none; display: inline-flex; align-items: baseline; gap: 7px; padding: 7px 12px; border: 1px solid transparent; border-radius: 999px; background: transparent; cursor: pointer; font-weight: 600; font-size: 14px; color: var(--muted); }
+.vista:hover { color: var(--ink); background: var(--surface); border-color: var(--line); }
+.vista[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.vista .c { font-variant-numeric: tabular-nums; font-weight: 500; opacity: .8; font-size: 13px; }
+.filtros { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.campo { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
+.campo select, .campo input { height: 34px; padding: 0 10px; border: 1px solid var(--line-strong); border-radius: 6px; background: var(--surface); font-size: 14px; color: var(--ink); }
+.campo input[type="number"] { width: 108px; }
+.busca { flex: 1 1 200px; min-width: 0; }
+.busca input { width: 100%; height: 34px; padding: 0 10px; border: 1px solid var(--line-strong); border-radius: 6px; background: var(--surface); font-size: 14px; }
+.seg { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 6px; overflow: hidden; background: var(--surface); }
+.seg button { height: 32px; padding: 0 11px; border: 0; background: transparent; cursor: pointer; font-size: 14px; color: var(--muted); }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); font-weight: 650; }
+.limpar { height: 34px; padding: 0 10px; border: 0; background: transparent; color: var(--accent); cursor: pointer; font-size: 14px; }
+.limpar:hover { text-decoration: underline; }
+
+/* Lista */
+.contagem { margin: 14px 0 6px; font-size: 13px; color: var(--muted); }
+.lista { list-style: none; margin: 0; padding: 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); }
+.imovel { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "end preco" "tit preco" "spec acoes"; gap: 2px 20px; padding: 14px 16px; border-top: 1px solid var(--line); }
+.imovel:first-child { border-top: 0; }
+.imovel.saiu { opacity: .62; }
+.end { grid-area: end; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; min-width: 0; }
+.rua { font-weight: 680; font-size: 16px; font-stretch: 104%; }
+.bairro { font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+.tit { grid-area: tit; min-width: 0; margin: 0; color: var(--muted); font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.spec { grid-area: spec; display: flex; flex-wrap: wrap; gap: 2px 12px; margin-top: 6px; font-size: 13.5px; min-width: 0; }
+.spec .anun { color: var(--muted); }
+.preco { grid-area: preco; text-align: right; display: grid; align-content: start; gap: 1px; }
+.total { font-stretch: 112%; font-weight: 740; font-size: 20px; font-variant-numeric: tabular-nums; line-height: 1.15; }
+.comp { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.acoes { grid-area: acoes; display: flex; justify-content: flex-end; align-items: center; gap: 2px; margin-top: 6px; }
+.ic { width: 34px; height: 34px; display: inline-grid; place-items: center; border: 0; border-radius: 6px; background: transparent; color: var(--muted); cursor: pointer; }
+.ic:hover { background: var(--bg); color: var(--ink); }
+.ic svg { width: 18px; height: 18px; }
+.ic[aria-pressed="true"].fav { color: var(--star); }
+.ic[aria-pressed="true"].oc { color: var(--bad); }
+.abrir { display: inline-flex; align-items: center; gap: 5px; height: 34px; padding: 0 10px; border-radius: 6px; color: var(--accent); font-weight: 600; font-size: 14px; text-decoration: none; }
+.abrir:hover { background: var(--accent-soft); }
+.abrir svg { width: 14px; height: 14px; }
+.tag { display: inline-block; font-size: 11.5px; font-weight: 650; letter-spacing: .03em; padding: 2px 7px; border-radius: 999px; white-space: nowrap; }
+.tag.novo { background: var(--accent-soft); color: var(--accent); }
+.tag.desce { background: var(--good-soft); color: var(--good); }
+.tag.sobe { background: var(--warn-soft); color: var(--warn); }
+.tag.saiu { background: var(--bad-soft); color: var(--bad); }
+.tag.volta { background: var(--accent-soft); color: var(--accent); }
+.vazio { padding: 40px 20px; text-align: center; color: var(--muted); }
+.vazio strong { display: block; color: var(--ink); font-size: 16px; margin-bottom: 4px; }
+
+/* Histórico e rodapé */
+.hist { margin-top: 28px; display: grid; gap: 8px; }
+.hist h2 { margin: 0; font-size: 13px; font-weight: 650; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.hist ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 13.5px; }
+.hist li { display: flex; flex-wrap: wrap; gap: 2px 12px; padding: 6px 0; border-bottom: 1px dashed var(--line); }
+.hist .q { font-variant-numeric: tabular-nums; min-width: 9.5em; color: var(--ink); font-weight: 600; }
+.hist .falha { color: var(--bad); }
+.nota { margin: 10px 0 0; font-size: 13px; color: var(--muted); max-width: 70ch; }
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); background: var(--ink); color: var(--bg); padding: 9px 14px; border-radius: 8px; font-size: 14px; z-index: 20; max-width: calc(100% - 32px); }
+
+@media (max-width: 640px) {
+  .imovel { grid-template-columns: minmax(0, 1fr); grid-template-areas: "end" "tit" "spec" "preco" "acoes"; }
+  .preco { text-align: left; margin-top: 8px; grid-auto-flow: column; justify-content: start; align-items: baseline; gap: 10px; }
+  .acoes { justify-content: flex-start; margin-left: -8px; }
+  .tit { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ic, .vista, .abrir { transition: background-color .12s, color .12s; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="topo">
+    <p class="eyebrow">DFimóveis · busca monitorada</p>
+    <h1>Aluguéis em Águas Claras</h1>
+    <ul class="ficha">
+      <li>Apartamento</li>
+      <li>Águas Claras Norte e Sul</li>
+      <li class="num">R$ 2.500 a R$ 4.500</li>
+      <li><a href="https://www.dfimoveis.com.br/aluguel/df/aguas-claras/norte,sul/apartamento?valorinicial=2500&amp;valorfinal=4500" target="_blank" rel="noopener noreferrer">Ver busca no site</a></li>
+    </ul>
+    <div class="status" id="status"><span>Carregando…</span></div>
+    <p class="alerta" id="alerta" hidden></p>
+  </header>
+
+  <div class="barra">
+    <div class="vistas" role="group" aria-label="Mostrar">
+      <button class="vista" type="button" data-vista="disp" aria-pressed="true">Disponíveis <span class="c" data-conta="disp">—</span></button>
+      <button class="vista" type="button" data-vista="novos" aria-pressed="false">Novos <span class="c" data-conta="novos">—</span></button>
+      <button class="vista" type="button" data-vista="fav" aria-pressed="false">Favoritos <span class="c" data-conta="fav">—</span></button>
+      <button class="vista" type="button" data-vista="sairam" aria-pressed="false">Saíram <span class="c" data-conta="sairam">—</span></button>
+      <button class="vista" type="button" data-vista="ocultos" aria-pressed="false">Ocultos <span class="c" data-conta="ocultos">—</span></button>
+    </div>
+    <div class="filtros">
+      <div class="seg" role="group" aria-label="Bairro">
+        <button type="button" data-bairro="" aria-pressed="true">Todos</button>
+        <button type="button" data-bairro="N" aria-pressed="false">Norte</button>
+        <button type="button" data-bairro="S" aria-pressed="false">Sul</button>
+      </div>
+      <label class="campo">Quartos
+        <select id="f-quartos">
+          <option value="0">Qualquer</option>
+          <option value="1">1 ou mais</option>
+          <option value="2">2 ou mais</option>
+          <option value="3">3 ou mais</option>
+        </select>
+      </label>
+      <label class="campo">Vagas
+        <select id="f-vagas">
+          <option value="0">Qualquer</option>
+          <option value="1">1 ou mais</option>
+          <option value="2">2 ou mais</option>
+        </select>
+      </label>
+      <label class="campo">Total até
+        <input id="f-total" type="number" inputmode="numeric" min="0" step="100" placeholder="R$">
+      </label>
+      <label class="campo">Ordem
+        <select id="f-ordem">
+          <option value="total">Menor total</option>
+          <option value="aluguel">Menor aluguel</option>
+          <option value="area">Maior área</option>
+          <option value="m2">Menor R$/m²</option>
+          <option value="recentes">Anunciados há menos tempo</option>
+        </select>
+      </label>
+      <label class="busca" for="f-busca"><input id="f-busca" type="search" placeholder="Buscar rua, prédio ou imobiliária" aria-label="Buscar rua, prédio ou imobiliária"></label>
+      <button class="limpar" type="button" id="limpar">Limpar filtros</button>
+    </div>
+  </div>
+
+  <p class="contagem" id="contagem" aria-live="polite"></p>
+  <ol class="lista" id="lista">
+    <li class="vazio"><strong>Carregando a lista</strong>Só um instante.</li>
+  </ol>
+
+  <section class="hist" aria-labelledby="hist-t">
+    <h2 id="hist-t">Últimas coletas</h2>
+    <ol id="hist-lista"><li>Nenhuma coleta registrada ainda.</li></ol>
+    <p class="nota">Dados coletados automaticamente do DFimóveis uma vez por dia; confira valores e disponibilidade no anúncio original. Total = aluguel + condomínio informado no anúncio. IPTU fica de fora porque cada anunciante informa de um jeito (mensal ou anual). Quando o anúncio diz "condomínio a consultar", o valor mostrado é só o aluguel; para ordenar e filtrar por total, esses anúncios entram com o condomínio mediano da lista. Favoritos e ocultos ficam salvos só neste navegador.</p>
+  </section>
+</div>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+(() => {
+  'use strict';
+  const TZ = 'America/Sao_Paulo';
+  const CHAVE_FILTROS = 'aguas-claras.filtros.v1';
+  const CHAVE_MARCAS = 'aguas-claras.marcas.v1';
+  const PADRAO = { vista: 'disp', bairro: '', quartos: 0, vagas: 0, total: '', ordem: 'total', busca: '' };
+  const ICONES = {
+    estrela: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>',
+    estrelaCheia: '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>',
+    ocultar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 6.1A9.6 9.6 0 0 1 12 6c5 0 8.5 4.3 9.5 6-.5.9-1.6 2.4-3.1 3.7M6.6 7.6C4.6 8.9 3.2 10.8 2.5 12c1 1.7 4.5 6 9.5 6 1.6 0 3-.4 4.3-1.1"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>',
+    externo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>'
+  };
+
+  const st = { dados: null, execs: [], marcas: {}, carregado: false, lento: false, erro: null, f: { ...PADRAO } };
+  try { const s = JSON.parse(localStorage.getItem(CHAVE_FILTROS) || 'null'); if (s && typeof s === 'object') st.f = { ...PADRAO, ...s }; } catch (e) {}
+  try { const m = JSON.parse(localStorage.getItem(CHAVE_MARCAS) || 'null'); if (m && typeof m === 'object') st.marcas = m; } catch (e) {}
+
+  const $ = (s) => document.querySelector(s);
+  const hoje = () => new Date().toLocaleDateString('sv-SE', { timeZone: TZ });
+  const dias = (de, ate) => Math.round((Date.parse(ate + 'T12:00:00Z') - Date.parse(de + 'T12:00:00Z')) / 864e5);
+  const reais = (n) => 'R$ ' + Math.round(n).toLocaleString('pt-BR');
+  const ddmm = (iso) => { const [, m, d] = String(iso).slice(0, 10).split('-'); return d && m ? d + '/' + m : ''; };
+  const sem = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  const MINUSC = new Set(['DA', 'DAS', 'DE', 'DO', 'DOS', 'E']);
+  const caso = (s) => String(s || '').split(' ').map((w) => (w.length > 1 && w === w.toUpperCase() && /[A-ZÀ-Ý]/.test(w)) ? (MINUSC.has(w) ? w.toLowerCase() : w.charAt(0) + w.slice(1).toLowerCase()) : w).join(' ');
+  const plural = (n, um, varios) => n + ' ' + (n === 1 ? um : varios);
+
+  function quando(iso) {
+    const t = Date.parse(iso); if (!t) return '';
+    const dia = new Date(t).toLocaleDateString('sv-SE', { timeZone: TZ });
+    const hora = new Date(t).toLocaleTimeString('pt-BR', { timeZone: TZ, hour: '2-digit', minute: '2-digit' });
+    const d = dias(dia, hoje());
+    if (d === 0) return 'hoje às ' + hora;
+    if (d === 1) return 'ontem às ' + hora;
+    return ddmm(dia) + ' às ' + hora;
+  }
+  function idade(pu) {
+    if (!pu) return '';
+    const d = dias(pu, hoje());
+    if (d <= 0) return 'anunciado hoje';
+    if (d === 1) return 'anunciado ontem';
+    if (d > 365) return 'anunciado há mais de 1 ano';
+    return 'anunciado há ' + d + ' dias';
+  }
+
+  function itens() {
+    const im = st.dados && st.dados.imoveis && typeof st.dados.imoveis === 'object' ? st.dados.imoveis : {};
+    const inicio = String((st.dados && st.dados.inicio) || '');
+    const h = hoje();
+    const conds = Object.values(im).map((x) => (x && x.c != null && x.c !== '' ? Number(x.c) : NaN)).filter((n) => n > 0).sort((a, b) => a - b);
+    const medCond = conds.length ? conds[Math.floor(conds.length / 2)] : 0;
+    const out = [];
+    for (const id of Object.keys(im)) {
+      const x = im[id];
+      if (!/^\d+$/.test(id) || !x || typeof x !== 'object') continue;
+      const p = Number(x.p) || 0, a = Number(x.a) || 0;
+      const c = x.c == null || x.c === '' ? null : Number(x.c);
+      const hist = x.h && typeof x.h === 'object' ? x.h : null;
+      let mud = null;
+      if (hist) { const k = Object.keys(hist).sort().pop(); if (k && dias(k, h) <= 14) mud = { em: k, de: Number(hist[k]) }; }
+      const m = st.marcas[id] || {};
+      out.push({
+        id, p, a, c, q: Number(x.q) || 0, s: Number(x.s) || 0, v: Number(x.v) || 0,
+        rua: caso(x.r), b: x.b === 'S' ? 'S' : 'N', t: String(x.t || ''), an: String(x.an || ''), pu: String(x.pu || ''),
+        d: String(x.d || ''), saiu: x.x ? String(x.x) : '', volta: x.rv ? String(x.rv) : '',
+        total: p + (c || 0), chave: p + (c != null ? c : medCond), m2: a ? p / a : Infinity, mud,
+        novo: !x.x && x.d && inicio && String(x.d) > inicio && dias(String(x.d), h) <= 7,
+        voltou: !x.x && x.rv && dias(String(x.rv), h) <= 7,
+        fav: !!m.fav, oculto: !!m.oculto
+      });
+    }
+    return out;
+  }
+
+  function passaFiltros(x) {
+    const f = st.f;
+    if (f.bairro && x.b !== f.bairro) return false;
+    if (f.quartos && x.q < f.quartos) return false;
+    if (f.vagas && x.v < f.vagas) return false;
+    const max = Number(f.total);
+    if (f.total !== '' && max > 0 && x.chave > max) return false;
+    if (f.busca) {
+      const alvo = sem(x.rua + ' ' + (x.b === 'N' ? 'norte' : 'sul') + ' ' + x.t + ' ' + x.an);
+      if (!sem(f.busca).split(/\s+/).filter(Boolean).every((w) => alvo.includes(w))) return false;
+    }
+    return true;
+  }
+  const NA_VISTA = {
+    disp: (x) => !x.saiu && !x.oculto,
+    novos: (x) => !x.saiu && (x.novo || x.voltou),
+    fav: (x) => x.fav,
+    sairam: (x) => !!x.saiu,
+    ocultos: (x) => x.oculto && !x.saiu
+  };
+  const ORDEM = {
+    total: (a, b) => a.chave - b.chave || a.p - b.p,
+    aluguel: (a, b) => a.p - b.p || a.chave - b.chave,
+    area: (a, b) => b.a - a.a || a.chave - b.chave,
+    m2: (a, b) => a.m2 - b.m2,
+    recentes: (a, b) => (b.pu > a.pu ? 1 : b.pu < a.pu ? -1 : a.chave - b.chave)
+  };
+
+  function el(tag, cls, txt) { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
+
+  function linha(x) {
+    const li = el('li', 'imovel' + (x.saiu ? ' saiu' : ''));
+    const end = el('div', 'end');
+    end.append(el('span', 'rua', x.rua || 'Endereço não informado'), el('span', 'bairro', x.b === 'N' ? 'Norte' : 'Sul'));
+    if (x.novo) end.append(el('span', 'tag novo', 'Novo · ' + ddmm(x.d)));
+    if (x.voltou) end.append(el('span', 'tag volta', 'Voltou · ' + ddmm(x.volta)));
+    if (x.mud && x.mud.de) end.append(el('span', 'tag ' + (x.p < x.mud.de ? 'desce' : 'sobe'), (x.p < x.mud.de ? 'Baixou' : 'Subiu') + ' · era ' + reais(x.mud.de)));
+    if (x.saiu) end.append(el('span', 'tag saiu', 'Saiu do site · ' + ddmm(x.saiu)));
+    li.append(end);
+    if (x.t) { const tit = el('p', 'tit', x.t); tit.title = x.t; li.append(tit); }
+    const spec = el('div', 'spec');
+    const partes = [plural(x.q, 'quarto', 'quartos')];
+    if (x.s) partes.push(plural(x.s, 'suíte', 'suítes'));
+    partes.push(x.v ? plural(x.v, 'vaga', 'vagas') : 'sem vaga');
+    if (x.a) partes.push(x.a + ' m²');
+    spec.append(el('span', 'num', partes.join(' · ')));
+    if (x.a) spec.append(el('span', 'num anun', reais(x.m2) + '/m²'));
+    if (x.an) spec.append(el('span', 'anun', x.an));
+    if (x.pu) spec.append(el('span', 'anun', idade(x.pu)));
+    li.append(spec);
+    const preco = el('div', 'preco');
+    preco.append(el('span', 'total', reais(x.c != null ? x.total : x.p)));
+    preco.append(el('span', 'comp', x.c != null ? reais(x.p) + ' + ' + reais(x.c) + ' cond.' : 'só aluguel · cond. a consultar'));
+    li.append(preco);
+    const ac = el('div', 'acoes');
+    const bf = el('button', 'ic fav'); bf.type = 'button'; bf.dataset.acao = 'fav'; bf.dataset.id = x.id;
+    bf.setAttribute('aria-pressed', String(x.fav)); bf.setAttribute('aria-label', x.fav ? 'Tirar dos favoritos' : 'Favoritar'); bf.title = bf.getAttribute('aria-label');
+    bf.innerHTML = x.fav ? ICONES.estrelaCheia : ICONES.estrela;
+    const bo = el('button', 'ic oc'); bo.type = 'button'; bo.dataset.acao = 'oculto'; bo.dataset.id = x.id;
+    bo.setAttribute('aria-pressed', String(x.oculto)); bo.setAttribute('aria-label', x.oculto ? 'Mostrar de novo' : 'Ocultar da lista'); bo.title = bo.getAttribute('aria-label');
+    bo.innerHTML = ICONES.ocultar;
+    const a = el('a', 'abrir'); a.href = 'https://www.dfimoveis.com.br/imovel/apartamento-' + x.id; a.target = '_blank'; a.rel = 'noopener noreferrer';
+    a.append(el('span', null, 'Abrir anúncio')); a.insertAdjacentHTML('beforeend', ICONES.externo);
+    ac.append(bf, bo, a);
+    li.append(ac);
+    return li;
+  }
+
+  function vazio(titulo, texto) { const li = el('li', 'vazio'); li.append(el('strong', null, titulo), document.createTextNode(texto)); return li; }
+
+  const MSG_VAZIO = {
+    disp: ['Nenhum apartamento com esses filtros', 'Afrouxe algum filtro ou limpe a busca.'],
+    novos: ['Nenhum anúncio novo nos últimos 7 dias', 'Os anúncios que entrarem no site aparecem aqui depois da coleta diária.'],
+    fav: ['Nenhum favorito ainda', 'Use a estrela de um anúncio para guardá-lo aqui.'],
+    sairam: ['Nenhum anúncio saiu do site recentemente', 'Anúncios removidos ficam aqui por 45 dias.'],
+    ocultos: ['Nenhum anúncio oculto', 'Oculte os que não interessam para limpar a lista principal.']
+  };
+
+  function desenhaStatus() {
+    const s = $('#status'); s.replaceChildren();
+    const alerta = $('#alerta'); alerta.hidden = true;
+    if (st.erro) { s.append(el('span', null, 'Não foi possível carregar os dados. Recarregue a página para tentar de novo.')); return; }
+    if (!st.dados) { s.append(el('span', null, st.lento ? 'Os dados estão demorando para chegar.' : 'Carregando…')); return; }
+    const d = st.dados;
+    const at = el('span'); at.append('Atualizado ', el('strong', null, quando(d.atualizadoEm) || '—')); s.append(at);
+    if (d.agenda) s.append(el('span', null, 'Coleta automática ' + String(d.agenda)));
+    const ult = st.execs[0];
+    if (ult && ult.ok) {
+      const dl = el('span', 'delta num');
+      const n = Array.isArray(ult.novos) ? ult.novos.length : 0, r = Array.isArray(ult.sairam) ? ult.sairam.length : 0, pr = Array.isArray(ult.precos) ? ult.precos.length : 0;
+      dl.append(el('span', 'mais', '+' + n + (n === 1 ? ' novo' : ' novos')), el('span', 'menos', '−' + r + (r === 1 ? ' saiu' : ' saíram')), el('span', null, plural(pr, 'preço mudou', 'preços mudaram')));
+      s.append(dl);
+    }
+    if (ult && ult.ok === false) { alerta.textContent = 'A coleta de ' + quando(ult.em) + ' não terminou: ' + String(ult.erro || 'motivo não informado') + '. A lista mostra os dados da última coleta completa.'; alerta.hidden = false; }
+    else if (d.atualizadoEm && (Date.now() - Date.parse(d.atualizadoEm)) > 36 * 3600e3) { alerta.textContent = 'A lista não é atualizada desde ' + quando(d.atualizadoEm) + '.'; alerta.hidden = false; }
+  }
+
+  function desenhaHistorico() {
+    const ol = $('#hist-lista'); ol.replaceChildren();
+    if (!st.execs.length) { ol.append(el('li', null, 'Nenhuma coleta registrada ainda.')); return; }
+    for (const e of st.execs.slice(0, 7)) {
+      const li = el('li');
+      li.append(el('span', 'q', quando(e.em)));
+      if (e.ok) {
+        const n = Array.isArray(e.novos) ? e.novos.length : 0, r = Array.isArray(e.sairam) ? e.sairam.length : 0, pr = Array.isArray(e.precos) ? e.precos.length : 0;
+        li.append(el('span', 'num', plural(Number(e.total) || 0, 'anúncio', 'anúncios')), el('span', 'num', plural(n, 'novo', 'novos') + ' · ' + r + (r === 1 ? ' saiu' : ' saíram') + ' · ' + plural(pr, 'preço', 'preços')));
+        if (e.nota) li.append(el('span', null, String(e.nota)));
+      } else {
+        li.append(el('span', 'falha', 'Falhou: ' + String(e.erro || 'motivo não informado')));
+      }
+      ol.append(li);
+    }
+  }
+
+  function sincronizaControles() {
+    const f = st.f;
+    document.querySelectorAll('[data-vista]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.vista === f.vista)));
+    document.querySelectorAll('[data-bairro]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.bairro === f.bairro)));
+    const q = $('#f-quartos'); if (q.value !== String(f.quartos)) q.value = String(f.quartos);
+    const v = $('#f-vagas'); if (v.value !== String(f.vagas)) v.value = String(f.vagas);
+    const o = $('#f-ordem'); if (o.value !== f.ordem) o.value = f.ordem;
+    const t = $('#f-total'); if (document.activeElement !== t && t.value !== String(f.total)) t.value = f.total;
+    const bu = $('#f-busca'); if (document.activeElement !== bu && bu.value !== f.busca) bu.value = f.busca;
+  }
+
+  let agendado = false;
+  function render() { if (agendado) return; agendado = true; requestAnimationFrame(() => { agendado = false; desenha(); }); }
+
+  function desenha() {
+    sincronizaControles();
+    desenhaStatus();
+    desenhaHistorico();
+    const lista = $('#lista');
+    if (!st.dados) {
+      lista.replaceChildren(st.erro ? vazio('Lista indisponível agora', 'Recarregue a página em instantes.') : vazio('Carregando a lista', st.lento ? 'Está demorando mais que o normal.' : 'Só um instante.'));
+      $('#contagem').textContent = '';
+      document.querySelectorAll('[data-conta]').forEach((e) => { e.textContent = '—'; });
+      return;
+    }
+    const todos = itens().filter(passaFiltros);
+    for (const k of Object.keys(NA_VISTA)) { const e = document.querySelector('[data-conta="' + k + '"]'); if (e) e.textContent = String(todos.filter(NA_VISTA[k]).length); }
+    const vista = NA_VISTA[st.f.vista] ? st.f.vista : 'disp';
+    const sel = todos.filter(NA_VISTA[vista]);
+    if (vista === 'novos') sel.sort((a, b) => ((b.volta || b.d) > (a.volta || a.d) ? 1 : (b.volta || b.d) < (a.volta || a.d) ? -1 : (ORDEM[st.f.ordem] || ORDEM.total)(a, b)));
+    else if (vista === 'sairam') sel.sort((a, b) => (b.saiu > a.saiu ? 1 : b.saiu < a.saiu ? -1 : a.total - b.total));
+    else sel.sort(ORDEM[st.f.ordem] || ORDEM.total);
+    const comCond = sel.filter((x) => x.c != null);
+    const media = comCond.length ? comCond.reduce((s, x) => s + x.total, 0) / comCond.length : 0;
+    $('#contagem').textContent = sel.length ? plural(sel.length, 'apartamento', 'apartamentos') + (media ? ' · total médio ' + reais(media) : '') : '';
+    const frag = document.createDocumentFragment();
+    if (!sel.length) frag.append(vazio(...MSG_VAZIO[vista]));
+    else sel.forEach((x) => frag.append(linha(x)));
+    lista.replaceChildren(frag);
+  }
+
+  function salvaFiltros() { try { localStorage.setItem(CHAVE_FILTROS, JSON.stringify(st.f)); } catch (e) {} }
+  function setF(patch) { st.f = { ...st.f, ...patch }; salvaFiltros(); render(); }
+
+  let toastT = null;
+  function aviso(txt) { const t = $('#toast'); t.textContent = txt; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, 3500); }
+
+  function marcar(id, campo) {
+    const m = { ...(st.marcas[id] || {}) };
+    m[campo] = !m[campo];
+    const marcas = { ...st.marcas };
+    if (!m.fav && !m.oculto) delete marcas[id]; else marcas[id] = { fav: !!m.fav, oculto: !!m.oculto };
+    st.marcas = marcas;
+    try { localStorage.setItem(CHAVE_MARCAS, JSON.stringify(marcas)); } catch (e) { aviso('Este navegador não permite guardar favoritos nesta página.'); }
+    render();
+  }
+
+  document.querySelectorAll('[data-vista]').forEach((b) => b.addEventListener('click', () => setF({ vista: b.dataset.vista })));
+  document.querySelectorAll('[data-bairro]').forEach((b) => b.addEventListener('click', () => setF({ bairro: b.dataset.bairro })));
+  $('#f-quartos').addEventListener('change', (e) => setF({ quartos: Number(e.target.value) || 0 }));
+  $('#f-vagas').addEventListener('change', (e) => setF({ vagas: Number(e.target.value) || 0 }));
+  $('#f-ordem').addEventListener('change', (e) => setF({ ordem: e.target.value }));
+  let tBusca = null;
+  $('#f-busca').addEventListener('input', (e) => { clearTimeout(tBusca); const v = e.target.value; tBusca = setTimeout(() => setF({ busca: v }), 150); });
+  let tTotal = null;
+  $('#f-total').addEventListener('input', (e) => { clearTimeout(tTotal); const v = e.target.value; tTotal = setTimeout(() => setF({ total: v }), 250); });
+  $('#limpar').addEventListener('click', () => { st.f = { ...PADRAO, vista: st.f.vista }; $('#f-total').value = ''; $('#f-busca').value = ''; salvaFiltros(); render(); });
+  $('#lista').addEventListener('click', (e) => { const b = e.target.closest('button[data-acao]'); if (b) marcar(b.dataset.id, b.dataset.acao); });
+
+  async function carregar() {
+    const timer = setTimeout(() => { if (!st.dados) { st.lento = true; render(); } }, 10000);
+    try {
+      const t = Date.now();
+      const [r1, r2] = await Promise.all([
+        fetch('data/imoveis.json?t=' + t, { cache: 'no-store' }),
+        fetch('data/execucoes.json?t=' + t, { cache: 'no-store' })
+      ]);
+      if (!r1.ok) throw new Error('HTTP ' + r1.status);
+      st.dados = await r1.json();
+      try { const ex = r2.ok ? await r2.json() : []; st.execs = Array.isArray(ex) ? ex : []; } catch (e) { st.execs = []; }
+      st.carregado = true;
+    } catch (e) {
+      st.erro = e;
+    } finally {
+      clearTimeout(timer);
+      render();
+    }
+  }
+
+  render();
+  carregar();
+})();
+</script>
+</body>
+</html>
