@@ -1,5 +1,5 @@
-/* Layout: barra fina fixa; abertura com uma frase-resumo e a faixa de preços (o mapa do mercado);
-   controles; grade de cartões planos; rodapé com as coletas recolhidas. */
+/* Layout: barra fina fixa; abertura com uma frase-resumo; controles; abas fixas;
+   grade de cartões planos; rodapé com as coletas recolhidas. */
 :root {
   --papel: #F5F7F4;
   --cartao: #FFFFFF;
@@ -19,9 +19,6 @@
   --sobe-fundo: #FBE9DD;
   --saiu: #A12F28;
   --saiu-fundo: #F8E3E1;
-  --veu: rgba(255, 255, 255, .78);
-  --g-agua: #008C9E;
-  --g-ipe: #E0A100;
   --fonte: "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   color-scheme: light;
 }
@@ -31,7 +28,6 @@
     --agua: #63C3CB; --agua-claro: #2B676C; --agua-fundo: #11302F;
     --ipe: #F2BF2E; --ipe-fundo: #3A2F0C; --ipe-tinta: #F7D774;
     --desce: #63CB92; --desce-fundo: #12301F; --sobe: #EE9C66; --sobe-fundo: #3A2414; --saiu: #F0857C; --saiu-fundo: #3B1916;
-    --veu: rgba(21, 29, 27, .78); --g-agua: #0F93A3; --g-ipe: #BF8B00;
     color-scheme: dark;
   }
 }
@@ -71,22 +67,6 @@ a { color: var(--agua); }
 .status { margin: 0; font-size: 14px; color: var(--cinza); }
 .status strong { color: var(--tinta); font-weight: 600; }
 .alerta { margin: 0; padding: 10px 14px; border-radius: 10px; background: var(--sobe-fundo); color: var(--sobe); font-size: 14px; max-width: 80ch; }
-
-.faixa { margin: 12px 0 0; padding: 14px 16px 10px; border-radius: 16px; background: var(--cartao); border: 1px solid var(--linha); }
-.faixa svg { display: block; width: 100%; height: 100px; cursor: crosshair; touch-action: manipulation; }
-.faixa svg:focus-visible { outline: 2px solid var(--agua); outline-offset: 4px; border-radius: 4px; }
-.faixa .barra { fill: var(--g-agua); }
-.faixa .fav { fill: var(--g-ipe); }
-.faixa .base { stroke: var(--linha-forte); stroke-width: 1; }
-.faixa .eixo { fill: var(--cinza); font-size: 11.5px; font-family: var(--fonte); font-variant-numeric: tabular-nums; }
-.faixa .mediana { stroke: var(--tinta); stroke-width: 1.5; }
-.faixa .rot-mediana { fill: var(--tinta); font-size: 11.5px; font-weight: 600; font-family: var(--fonte); }
-.faixa .veu { fill: var(--veu); }
-.faixa .limite { stroke: var(--tinta); stroke-width: 1.5; stroke-dasharray: 4 3; }
-.faixa .cursor { stroke: var(--agua); stroke-width: 1.5; pointer-events: none; }
-.faixa figcaption { margin-top: 8px; font-size: 13.5px; color: var(--cinza); min-height: 1.5em; }
-.leg-fav { display: inline-flex; align-items: center; gap: 6px; margin-left: 6px; white-space: nowrap; }
-.leg-fav i { width: 3px; height: 10px; border-radius: 1px; background: var(--g-ipe); }
 
 /* Controles */
 .controles { padding-block: 20px 12px; display: grid; gap: 12px; }
@@ -186,7 +166,6 @@ dialog::backdrop { background: rgba(10, 18, 16, .45); }
 
 @media (max-width: 640px) {
   .abertura { padding-top: 28px; }
-  .faixa { padding: 12px 12px 10px; }
   .marca span { font-size: 15px; }
 }
 @media (prefers-reduced-motion: no-preference) {

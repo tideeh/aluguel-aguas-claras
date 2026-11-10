@@ -36,10 +36,6 @@
     <p class="criterios">Apartamentos de 2 quartos ou mais, com aluguel de R$ 2.500 a R$ 4.500, em Águas Claras Norte e Sul, anunciados no <a href="https://www.dfimoveis.com.br/aluguel/df/aguas-claras/norte,sul/apartamento/2-quartos,3-quartos,4-quartos?valorinicial=2500&amp;valorfinal=4500" target="_blank" rel="noopener noreferrer">DFimóveis</a>.</p>
     <p class="status" id="status" aria-live="polite"></p>
     <p class="alerta" id="alerta" hidden></p>
-    <figure class="faixa" id="faixa" hidden>
-      <svg id="faixa-svg" role="slider" tabindex="0" aria-label="Limite de total por mês. Use as setas para ajustar." aria-describedby="faixa-leg"></svg>
-      <figcaption id="faixa-leg"></figcaption>
-    </figure>
   </section>
 
   <section class="controles" aria-label="Filtros">
@@ -66,7 +62,7 @@
         <button type="button" data-vagas="1">1 ou mais</button>
         <button type="button" data-vagas="2">2 ou mais</button>
       </div>
-      <label class="campo">Total até R$ <input id="f-max" type="text" inputmode="numeric" maxlength="6" placeholder="sem limite"></label>
+      <label class="campo">Aluguel até R$ <input id="f-max" type="text" inputmode="numeric" maxlength="6" placeholder="sem limite"></label>
       <button class="limpar" type="button" id="limpar" hidden>Limpar filtros</button>
     </div>
   </section>
@@ -84,8 +80,8 @@
     <p class="contagem" id="contagem" aria-live="polite"></p>
     <label class="campo">Ordenar por
       <select id="f-ordem">
-        <option value="total">Menor total</option>
         <option value="aluguel">Menor aluguel</option>
+        <option value="condominio">Menor condomínio</option>
         <option value="area">Maior área</option>
         <option value="m2">Menor preço por m²</option>
         <option value="recentes">Anúncio mais recente</option>
@@ -100,7 +96,7 @@
     <summary>Últimas coletas</summary>
     <ol id="hist"></ol>
   </details>
-  <p>Dados do DFimóveis, coletados automaticamente uma vez por dia. Confira valor e disponibilidade no anúncio original. O total por mês soma aluguel e condomínio; o IPTU fica de fora porque cada anunciante informa de um jeito. Quando o condomínio é "a consultar", a ordenação, o limite e o gráfico usam o condomínio mediano da lista.</p>
+  <p>Dados do DFimóveis, coletados automaticamente uma vez por dia. Confira valor e disponibilidade no anúncio original. O valor em destaque é o aluguel; o condomínio aparece logo abaixo, como informado no anúncio, e o IPTU fica de fora porque cada anunciante informa de um jeito.</p>
   <p>Favoritos, ocultos e notas ficam neste navegador. Com a sincronização ativa, valem em todos os aparelhos que abrirem o link.</p>
 </footer>
 

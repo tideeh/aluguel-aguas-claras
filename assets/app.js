@@ -1,17 +1,15 @@
 (() => {
   'use strict';
   const TZ = 'America/Sao_Paulo';
-  const CHAVE_FILTROS = 'aguas-claras.filtros.v2';
+  const CHAVE_FILTROS = 'aguas-claras.filtros.v3';
   const CHAVE_MARCAS = 'aguas-claras.marcas.v1';
   const CHAVE_SYNC = 'aguas-claras.chave.v1';
   const CHAVE_UNIAO = 'aguas-claras.uniao.v1';
   const CHAVE_VALIDA = /^[A-Za-z0-9_-]{43}$/;
   const MAX_NOTA = 500;
-  const PADRAO = { vista: 'disp', bairro: '', quartos: 2, vagas: 0, max: '', ordem: 'total', busca: '' };
+  const PADRAO = { vista: 'disp', bairro: '', quartos: 2, vagas: 0, max: '', ordem: 'aluguel', busca: '' };
   const VISTAS = ['disp', 'novos', 'fav', 'notas', 'sairam', 'ocultos'];
-  const ORDENS = ['total', 'aluguel', 'area', 'm2', 'recentes'];
-  const NS = 'http://www.w3.org/2000/svg';
-  const VERBO = window.matchMedia && matchMedia('(hover: none)').matches ? 'Toque' : 'Clique';
+  const ORDENS = ['aluguel', 'condominio', 'area', 'm2', 'recentes'];
 
   const ic = (d) => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>';
   const ICONE = {
@@ -32,7 +30,6 @@
   const hoje = () => new Date().toLocaleDateString('sv-SE', { timeZone: TZ });
   const dias = (de, ate) => Math.round((Date.parse(ate + 'T12:00:00Z') - Date.parse(de + 'T12:00:00Z')) / 864e5);
   const reais = (n) => 'R$ ' + Math.round(n).toLocaleString('pt-BR');
-  const milReais = (n) => 'R$ ' + (n / 1000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' mil';
   const ddmm = (iso) => { const [, m, d] = String(iso).slice(0, 10).split('-'); return d && m ? d + '/' + m : ''; };
   const sem = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
   const MINUSC = new Set(['DA', 'DAS', 'DE', 'DO', 'DOS', 'E', 'EM', 'NA', 'NO', 'C/']);
@@ -60,7 +57,6 @@
     return 'anunciado há ' + d + ' dias';
   }
   function el(tag, cls, txt) { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
-  function sv(tag, attrs, pai) { const e = document.createElementNS(NS, tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, String(v)); if (pai) pai.append(e); return e; }
 
   // ---------- Estado ----------
   function filtrosValidos(s) {
@@ -81,7 +77,7 @@
     sync: { api: null, chave: null, estado: 'local', ultima: 0 },
     notaId: null
   };
-  gravar('aguas-claras.filtros.v1', null);
+  gravar('aguas-claras.filtros.v1', null); gravar('aguas-claras.filtros.v2', null);
   { const m = ler(CHAVE_MARCAS, null); if (m && typeof m === 'object') st.marcas = m; }
   { const c = ler(CHAVE_SYNC, null); if (typeof c === 'string' && CHAVE_VALIDA.test(c)) st.sync.chave = c; }
 
@@ -187,8 +183,6 @@
     const im = st.dados && st.dados.imoveis && typeof st.dados.imoveis === 'object' ? st.dados.imoveis : {};
     const inicio = String((st.dados && st.dados.inicio) || '');
     const h = hoje();
-    const conds = Object.values(im).map((x) => (x && x.c != null && x.c !== '' ? Number(x.c) : NaN)).filter((n) => n > 0).sort((a, b) => a - b);
-    const medCond = conds.length ? metade(conds) : 0;
     const out = [];
     for (const id of Object.keys(im)) {
       const x = im[id];
@@ -203,7 +197,7 @@
         id, p, a, c, q: Number(x.q) || 0, s: Number(x.s) || 0, v: Number(x.v) || 0,
         rua: caso(x.r), b: x.b === 'S' ? 'S' : 'N', t: String(x.t || ''), an: String(x.an || ''), pu: String(x.pu || ''),
         d: String(x.d || ''), saiu: x.x ? String(x.x) : '', volta: x.rv ? String(x.rv) : '',
-        total: p + (c || 0), chave: p + (c != null ? c : medCond), m2: a ? p / a : Infinity, mud,
+        m2: a ? p / a : Infinity, mud,
         novo: !x.x && !!x.d && !!inicio && String(x.d) > inicio && dias(String(x.d), h) <= 7,
         voltou: !x.x && !!x.rv && dias(String(x.rv), h) <= 7,
         fav: !!m.fav, oculto: !!m.oculto, nota: String(m.nota || '')
@@ -225,7 +219,7 @@
     }
     return true;
   }
-  function passaFiltros(x) { if (!passaBase(x)) return false; const m = maxNum(); return !(m && x.chave > m); }
+  function passaFiltros(x) { if (!passaBase(x)) return false; const m = maxNum(); return !(m && x.p > m); }
 
   const NA_VISTA = {
     disp: (x) => !x.saiu && !x.oculto,
@@ -236,11 +230,11 @@
     ocultos: (x) => x.oculto && !x.saiu
   };
   const ORDEM = {
-    total: (a, b) => a.chave - b.chave || a.p - b.p,
-    aluguel: (a, b) => a.p - b.p || a.chave - b.chave,
-    area: (a, b) => b.a - a.a || a.chave - b.chave,
-    m2: (a, b) => a.m2 - b.m2 || a.chave - b.chave,
-    recentes: (a, b) => (b.pu > a.pu ? 1 : b.pu < a.pu ? -1 : a.chave - b.chave)
+    aluguel: (a, b) => a.p - b.p || (a.c ?? Infinity) - (b.c ?? Infinity),
+    condominio: (a, b) => (a.c ?? Infinity) - (b.c ?? Infinity) || a.p - b.p,
+    area: (a, b) => b.a - a.a || a.p - b.p,
+    m2: (a, b) => a.m2 - b.m2 || a.p - b.p,
+    recentes: (a, b) => (b.pu > a.pu ? 1 : b.pu < a.pu ? -1 : a.p - b.p)
   };
 
   // ---------- Abertura ----------
@@ -248,13 +242,13 @@
     const h = $('#manchete');
     if (st.erro) { h.textContent = 'Não foi possível carregar a lista.'; return; }
     if (!st.dados) { h.textContent = st.lento ? 'A lista está demorando para carregar.' : 'Carregando os apartamentos…'; return; }
-    const disp = todos.filter((x) => !x.saiu).map((x) => x.chave).sort((a, b) => a - b);
+    const disp = todos.filter((x) => !x.saiu).map((x) => x.p).sort((a, b) => a - b);
     if (!disp.length) { h.textContent = 'Nenhum apartamento disponível hoje.'; return; }
     const num = (t) => el('span', 'num', t);
     h.replaceChildren(
       num(disp.length.toLocaleString('pt-BR') + (disp.length === 1 ? ' apartamento' : ' apartamentos')),
       document.createTextNode(disp.length === 1 ? ' disponível. ' : ' disponíveis. '),
-      document.createTextNode('Metade custa até '), num(reais(metade(disp))), document.createTextNode(' por mês.')
+      document.createTextNode('Metade tem aluguel de até '), num(reais(metade(disp))), document.createTextNode('.')
     );
   }
 
@@ -281,102 +275,6 @@
     else if (d.atualizadoEm && Date.now() - Date.parse(d.atualizadoEm) > 36 * 3600e3) { alerta.textContent = 'A lista não é atualizada desde ' + quando(d.atualizadoEm) + '.'; alerta.hidden = false; }
   }
 
-  // ---------- Faixa de preços: um gráfico por faixa de R$ 100, que também define o limite de total ----------
-  const FX = { base: [], dom: null, cursor: null };
-  const G = { h: 100, pad: 6, topo: 20, baseY: 72, rugY: 77, eixoY: 97 };
-
-  function barra(x, y0, w, h) {
-    const r = Math.min(4, w / 2, h);
-    return 'M' + x + ',' + y0 + 'V' + (y0 - h + r) + 'Q' + x + ',' + (y0 - h) + ' ' + (x + r) + ',' + (y0 - h) +
-      'H' + (x + w - r) + 'Q' + (x + w) + ',' + (y0 - h) + ' ' + (x + w) + ',' + (y0 - h + r) + 'V' + y0 + 'Z';
-  }
-  const contaAte = (p) => FX.base.reduce((n, x) => n + (x.chave <= p ? 1 : 0), 0);
-
-  function desenhaFaixa(base) {
-    FX.base = base;
-    const fig = $('#faixa'), svg = $('#faixa-svg');
-    fig.hidden = !st.dados;
-    if (fig.hidden) return;
-    const w = Math.round(svg.getBoundingClientRect().width);
-    svg.replaceChildren(); FX.dom = null; FX.cursor = null;
-    if (!w) return;
-    svg.setAttribute('viewBox', '0 0 ' + w + ' ' + G.h);
-    if (!base.length) { svg.removeAttribute('aria-valuenow'); legenda(); return; }
-
-    const precos = base.map((x) => x.chave).sort((a, b) => a - b);
-    const plotW = w - 2 * G.pad;
-    let lo = Math.floor(precos[0] / 500) * 500, hi = Math.ceil(precos[precos.length - 1] / 500) * 500;
-    if (hi <= lo) hi = lo + 500;
-    const bin = [100, 200, 250, 500].find((b) => plotW / ((hi - lo) / b) >= 9) || 1000;
-    lo = Math.floor(lo / bin) * bin; hi = Math.ceil(hi / bin) * bin;
-    const n = Math.round((hi - lo) / bin), slot = plotW / n, bw = Math.min(24, Math.max(2, slot - 2));
-    const X = (p) => G.pad + (p - lo) / (hi - lo) * plotW;
-    const conta = new Array(n).fill(0);
-    for (const p of precos) conta[Math.min(n - 1, Math.floor((p - lo) / bin))]++;
-    const maxC = Math.max(...conta), altura = G.baseY - G.topo;
-    FX.dom = { lo, hi, X, plotW, total: precos.length };
-
-    for (let i = 0; i < n; i++) {
-      if (!conta[i]) continue;
-      sv('path', { d: barra(G.pad + i * slot + (slot - bw) / 2, G.baseY, bw, Math.max(2, conta[i] / maxC * altura)), class: 'barra' }, svg);
-    }
-    sv('line', { x1: G.pad, x2: w - G.pad, y1: G.baseY + 0.5, y2: G.baseY + 0.5, class: 'base' }, svg);
-    for (const x of base) if (x.fav) sv('rect', { x: X(x.chave) - 1.5, y: G.rugY, width: 3, height: 8, rx: 1, class: 'fav' }, svg);
-
-    const m = maxNum();
-    if (m && m < hi) {
-      const xm = Math.max(G.pad, X(m));
-      sv('rect', { x: xm, y: 0, width: Math.max(0, w - xm), height: G.rugY + 9, class: 'veu' }, svg);
-    }
-    const med = metade(precos), xmed = X(med);
-    sv('line', { x1: xmed, x2: xmed, y1: 15, y2: G.baseY, class: 'mediana' }, svg);
-    const direita = xmed < w - 120;
-    const rot = sv('text', { x: direita ? xmed + 5 : xmed - 5, y: 11, class: 'rot-mediana', 'text-anchor': direita ? 'start' : 'end' }, svg);
-    rot.textContent = 'Metade até ' + reais(med);
-    if (m && m < hi) { const xm = Math.max(G.pad, X(m)); sv('line', { x1: xm, x2: xm, y1: 15, y2: G.rugY + 9, class: 'limite' }, svg); }
-
-    const passo = [500, 1000, 2000].find((s) => s / (hi - lo) * plotW >= 70) || 5000;
-    for (let v = Math.ceil(lo / passo) * passo; v <= hi; v += passo) {
-      const xv = X(v);
-      const t = sv('text', { x: xv, y: G.eixoY, class: 'eixo', 'text-anchor': xv < 32 ? 'start' : xv > w - 32 ? 'end' : 'middle' }, svg);
-      t.textContent = milReais(v);
-    }
-    FX.cursor = sv('line', { x1: 0, x2: 0, y1: 15, y2: G.rugY + 9, class: 'cursor', visibility: 'hidden' }, svg);
-
-    svg.setAttribute('aria-valuemin', String(lo));
-    svg.setAttribute('aria-valuemax', String(hi));
-    svg.setAttribute('aria-valuenow', String(m && m < hi ? m : hi));
-    svg.setAttribute('aria-valuetext', m ? 'Até ' + reais(m) + ' por mês, ' + plural(contaAte(m), 'apartamento', 'apartamentos') : 'Sem limite, ' + plural(precos.length, 'apartamento', 'apartamentos'));
-    legenda();
-  }
-
-  function legenda(p) {
-    const cap = $('#faixa-leg');
-    cap.replaceChildren();
-    if (!FX.dom) { cap.textContent = st.dados ? 'Nenhum apartamento disponível com esses filtros.' : ''; return; }
-    const total = FX.dom.total, m = maxNum();
-    if (p != null) {
-      const n = contaAte(p);
-      cap.textContent = 'Até ' + reais(p) + ' por mês: ' + plural(n, 'apartamento', 'apartamentos') + '. ' +
-        (String(p) === st.f.max ? VERBO + ' para remover o limite.' : VERBO + ' para mostrar só esses.');
-      return;
-    }
-    if (m && m < FX.dom.hi) cap.append('Até ' + reais(m) + ' por mês: ' + contaAte(m).toLocaleString('pt-BR') + ' de ' + plural(total, 'apartamento', 'apartamentos') + '. ' + VERBO + ' em outro ponto para mudar o limite.');
-    else cap.append('Total por mês dos ' + plural(total, 'apartamento disponível', 'apartamentos disponíveis') + (filtrosAtivos() ? ' com esses filtros' : '') + ', em faixas de preço. ' + VERBO + ' para definir um limite.');
-    if (FX.base.some((x) => x.fav)) { const lf = el('span', 'leg-fav'); lf.append(el('i'), 'favoritos'); cap.append(lf); }
-  }
-
-  function precoNoPonto(clientX) {
-    const svg = $('#faixa-svg'), r = svg.getBoundingClientRect(), d = FX.dom;
-    const bruto = d.lo + (clientX - r.left - G.pad) / d.plotW * (d.hi - d.lo);
-    return Math.min(d.hi, Math.max(d.lo, Math.round(bruto / 100) * 100));
-  }
-  function aplicaLimite(p) {
-    if (!FX.dom) return;
-    const novo = p >= FX.dom.hi || String(p) === st.f.max ? '' : String(p);
-    setF({ max: novo });
-  }
-
   // ---------- Cartões ----------
   function cartao(x) {
     const li = el('li', 'cartao' + (x.saiu ? ' saiu' : ''));
@@ -397,8 +295,8 @@
     fav.setAttribute('aria-label', x.fav ? 'Tirar dos favoritos' : 'Favoritar'); fav.title = fav.getAttribute('aria-label');
     fav.innerHTML = ICONE.estrela;
     const total = el('div', 'c-total');
-    total.append(el('span', 'valor', reais(x.c != null ? x.total : x.p)), el('span', 'mes', x.c != null ? 'por mês' : '+ condomínio'), fav);
-    const comp = el('p', 'c-composicao', x.c != null ? 'Aluguel ' + reais(x.p) + ' + condomínio ' + reais(x.c) : 'Aluguel ' + reais(x.p) + ', condomínio a consultar');
+    total.append(el('span', 'valor', reais(x.p)), el('span', 'mes', 'por mês'), fav);
+    const comp = el('p', 'c-composicao', x.c != null ? 'Condomínio ' + reais(x.c) : 'Condomínio a consultar');
 
     const end = el('h2', 'c-endereco');
     end.append(x.rua || 'Endereço não informado', ' ', el('span', 'c-bairro', x.b === 'N' ? 'Norte' : 'Sul'));
@@ -435,7 +333,7 @@
 
   function vazio(titulo, texto) { const li = el('li', 'vazio'); li.append(el('strong', null, titulo), texto); return li; }
   const MSG_VAZIO = {
-    disp: ['Nenhum apartamento com esses filtros', 'Afrouxe algum filtro, aumente o limite de total ou limpe a busca.'],
+    disp: ['Nenhum apartamento com esses filtros', 'Afrouxe algum filtro, aumente o limite de aluguel ou limpe a busca.'],
     novos: ['Nenhum anúncio novo nos últimos 7 dias', 'Os que entrarem no site aparecem aqui depois da coleta diária.'],
     fav: ['Nenhum favorito', 'Use a estrela de um anúncio para guardá-lo aqui.'],
     notas: ['Nenhuma nota', 'Use o botão Nota de um anúncio para registrar contato, visita ou impressões.'],
@@ -503,7 +401,6 @@
     const grade = $('#grade');
     if (!st.dados) {
       desenhaManchete([]);
-      $('#faixa').hidden = true;
       grade.replaceChildren(st.erro ? vazio('Lista indisponível agora', 'Recarregue a página em instantes.') : vazio('Carregando a lista', st.lento ? 'Está demorando mais que o normal.' : 'Só um instante.'));
       $('#contagem').textContent = '';
       document.querySelectorAll('[data-conta]').forEach((e) => { e.textContent = ''; });
@@ -512,7 +409,6 @@
     const todos = itens();
     st.porId = Object.fromEntries(todos.map((x) => [x.id, x]));
     desenhaManchete(todos);
-    desenhaFaixa(todos.filter((x) => !x.saiu && !x.oculto && passaBase(x)));
 
     const filtrados = todos.filter(passaFiltros);
     for (const k of VISTAS) { const e = document.querySelector('[data-conta="' + k + '"]'); if (e) e.textContent = filtrados.filter(NA_VISTA[k]).length.toLocaleString('pt-BR'); }
@@ -555,7 +451,7 @@
     const x = st.porId[id]; if (!x) return;
     st.notaId = id;
     $('#dn-titulo').textContent = x.nota ? 'Editar nota' : 'Nova nota';
-    $('#dn-sub').textContent = (x.rua || 'Endereço não informado') + ' ' + (x.b === 'N' ? 'Norte' : 'Sul') + ', ' + reais(x.c != null ? x.total : x.p) + (x.c != null ? ' por mês' : ' + condomínio');
+    $('#dn-sub').textContent = (x.rua || 'Endereço não informado') + ' ' + (x.b === 'N' ? 'Norte' : 'Sul') + ', aluguel de ' + reais(x.p);
     const ta = $('#dn-texto'); ta.value = x.nota; contaNota();
     $('#dn-apagar').hidden = !x.nota;
     dlgNota.returnValue = '';
@@ -581,7 +477,7 @@
   document.querySelectorAll('[data-bairro]').forEach((b) => b.addEventListener('click', () => setF({ bairro: b.dataset.bairro })));
   document.querySelectorAll('[data-quartos]').forEach((b) => b.addEventListener('click', () => setF({ quartos: Number(b.dataset.quartos) })));
   document.querySelectorAll('[data-vagas]').forEach((b) => b.addEventListener('click', () => setF({ vagas: Number(b.dataset.vagas) })));
-  $('#f-ordem').addEventListener('change', (e) => setF({ ordem: ORDENS.includes(e.target.value) ? e.target.value : 'total' }));
+  $('#f-ordem').addEventListener('change', (e) => setF({ ordem: ORDENS.includes(e.target.value) ? e.target.value : 'aluguel' }));
   let tBusca = null;
   $('#f-busca').addEventListener('input', (e) => { clearTimeout(tBusca); const v = e.target.value.slice(0, 100); tBusca = setTimeout(() => setF({ busca: v }), 150); });
   let tMax = null;
@@ -597,36 +493,6 @@
     $('#f-max').value = ''; $('#f-busca').value = '';
     gravar(CHAVE_FILTROS, st.f); render();
   });
-
-  const svgFaixa = $('#faixa-svg');
-  svgFaixa.addEventListener('pointermove', (e) => {
-    if (!FX.dom || !FX.cursor) return;
-    const p = precoNoPonto(e.clientX), x = FX.dom.X(p);
-    FX.cursor.setAttribute('x1', x); FX.cursor.setAttribute('x2', x); FX.cursor.setAttribute('visibility', 'visible');
-    legenda(p);
-  });
-  svgFaixa.addEventListener('pointerleave', () => { if (FX.cursor) FX.cursor.setAttribute('visibility', 'hidden'); legenda(); });
-  svgFaixa.addEventListener('click', (e) => { if (FX.dom) aplicaLimite(precoNoPonto(e.clientX)); });
-  svgFaixa.addEventListener('keydown', (e) => {
-    if (!FX.dom) return;
-    const { lo, hi } = FX.dom, atual = maxNum() && maxNum() < hi ? maxNum() : hi;
-    const passos = { ArrowLeft: -100, ArrowDown: -100, ArrowRight: 100, ArrowUp: 100, PageDown: -500, PageUp: 500 };
-    let novo;
-    if (e.key in passos) novo = Math.round((atual + passos[e.key]) / 100) * 100;
-    else if (e.key === 'Home') novo = lo;
-    else if (e.key === 'End') novo = hi;
-    else return;
-    e.preventDefault();
-    novo = Math.min(hi, Math.max(lo, novo));
-    setF({ max: novo >= hi ? '' : String(novo) });
-  });
-  if (window.ResizeObserver) {
-    let largura = 0;
-    new ResizeObserver((entradas) => {
-      const w = Math.round(entradas[0].contentRect.width);
-      if (w && w !== largura) { largura = w; if (st.dados) desenhaFaixa(FX.base); }
-    }).observe(svgFaixa);
-  }
 
   $('#grade').addEventListener('click', (e) => {
     const b = e.target.closest('button[data-acao]'); if (!b) return;

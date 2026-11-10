@@ -6,7 +6,7 @@ Site estático com os apartamentos de 2 quartos ou mais para alugar em Águas Cl
 
 | Caminho | Conteúdo |
 | --- | --- |
-| `index.html` | Página única: resumo do dia, gráfico de preços (que também define o limite de total), filtros, abas e cartões. |
+| `index.html` | Página única: resumo do dia, filtros, abas e cartões. |
 | `assets/estilo.css`, `assets/app.js` | Visual (tema claro e escuro) e lógica da página: filtros, marcações (favorito, oculto, nota) e sincronização. |
 | `data/imoveis.json` | Estado atual. Um anúncio por linha, chave = id do DFimóveis. |
 | `data/execucoes.json` | Últimas 60 coletas (mais recente primeiro). |
