@@ -1,20 +1,20 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: >-
   Acesso do GitHub Actions (OIDC, sem chaves guardadas) para publicar o backend do site
-  Aluguéis em Águas Claras. Execute uma única vez, na região sa-east-1.
+  Alugueis em Aguas Claras. Execute uma unica vez, na regiao sa-east-1.
 
 Parameters:
   SubjectGitHub:
     Type: String
     Default: repo:tideeh@33804453/aluguel-aguas-claras@1452667290:ref:refs/heads/main
     Description: >-
-      Valor exato do claim sub do token OIDC autorizado. Repositórios criados após 15/07/2026 usam
-      o formato com IDs imutáveis (repo:dono@id/repositorio@id:ref:refs/heads/main).
+      Valor exato do claim sub do token OIDC autorizado. Repositorios criados apos 15/07/2026 usam
+      o formato com IDs imutaveis (repo:dono@id/repositorio@id:ref:refs/heads/main).
   CriarProvedorOidc:
     Type: String
     AllowedValues: ['sim', 'nao']
     Default: 'sim'
-    Description: Use "nao" se a conta já tiver o provedor OIDC token.actions.githubusercontent.com
+    Description: Use "nao" se a conta ja tiver o provedor OIDC token.actions.githubusercontent.com
 
 Conditions:
   CriarProvedor: !Equals [!Ref CriarProvedorOidc, 'sim']
@@ -52,8 +52,8 @@ Resources:
             Status: Enabled
             ExpirationInDays: 30
 
-  # Teto de permissões de qualquer papel criado pelo deploy: mesmo que o workflow seja abusado,
-  # a função só consegue mexer na própria tabela e escrever os próprios logs.
+  # Teto de permissoes de qualquer papel criado pelo deploy: mesmo que o workflow seja abusado,
+  # a funcao so consegue mexer na propria tabela e escrever os proprios logs.
   LimiteFuncao:
     Type: AWS::IAM::ManagedPolicy
     Properties:
@@ -72,7 +72,7 @@ Resources:
     Type: AWS::IAM::Role
     Properties:
       RoleName: aluguel-aguas-claras-deploy
-      Description: Usado pelo GitHub Actions do repositório para publicar o backend
+      Description: Usado pelo GitHub Actions do repositorio para publicar o backend
       MaxSessionDuration: 3600
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
@@ -93,7 +93,7 @@ Resources:
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
-              # Curingas por serviço, sempre restritos aos recursos com o prefixo do projeto.
+              # Curingas por servico, sempre restritos aos recursos com o prefixo do projeto.
               - Sid: Stack
                 Effect: Allow
                 Action: cloudformation:*
@@ -132,7 +132,7 @@ Resources:
                 Effect: Allow
                 Action: logs:DescribeLogGroups
                 Resource: '*'
-              # Papéis da função: só com o limite acima aplicado, e só com o prefixo da stack.
+              # Papeis da funcao: so com o limite acima aplicado, e so com o prefixo da stack.
               - Sid: PapelDaFuncaoComLimite
                 Effect: Allow
                 Action:
@@ -167,7 +167,7 @@ Resources:
 
 Outputs:
   PapelArn:
-    Description: Cadastre este valor no secret AWS_ROLE_ARN do repositório
+    Description: Cadastre este valor no secret AWS_ROLE_ARN do repositorio
     Value: !GetAtt PapelDeploy.Arn
   Bucket:
     Description: Bucket dos pacotes de deploy
