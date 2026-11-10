@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: >-
   Acesso do GitHub Actions (OIDC, sem chaves guardadas) para publicar o backend do site
-  Alugueis em Aguas Claras. Execute uma unica vez, na regiao sa-east-1.
+  Alugueis em Aguas Claras. Execute uma unica vez, na mesma regiao configurada em AWS_REGION no workflow (us-east-1).
 
 Parameters:
   SubjectGitHub:
