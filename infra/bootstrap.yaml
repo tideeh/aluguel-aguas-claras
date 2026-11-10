@@ -4,10 +4,12 @@ Description: >-
   Aluguéis em Águas Claras. Execute uma única vez, na região sa-east-1.
 
 Parameters:
-  Repositorio:
+  SubjectGitHub:
     Type: String
-    Default: tideeh/aluguel-aguas-claras
-    Description: Repositório GitHub autorizado (dono/nome)
+    Default: repo:tideeh@33804453/aluguel-aguas-claras@1452667290:ref:refs/heads/main
+    Description: >-
+      Valor exato do claim sub do token OIDC autorizado. Repositórios criados após 15/07/2026 usam
+      o formato com IDs imutáveis (repo:dono@id/repositorio@id:ref:refs/heads/main).
   CriarProvedorOidc:
     Type: String
     AllowedValues: ['sim', 'nao']
@@ -85,7 +87,7 @@ Resources:
             Condition:
               StringEquals:
                 token.actions.githubusercontent.com:aud: sts.amazonaws.com
-                token.actions.githubusercontent.com:sub: !Sub repo:${Repositorio}:ref:refs/heads/main
+                token.actions.githubusercontent.com:sub: !Ref SubjectGitHub
       Policies:
         - PolicyName: publicar-backend
           PolicyDocument:
