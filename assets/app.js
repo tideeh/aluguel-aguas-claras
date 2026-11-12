@@ -183,6 +183,8 @@
     const im = st.dados && st.dados.imoveis && typeof st.dados.imoveis === 'object' ? st.dados.imoveis : {};
     const inicio = String((st.dados && st.dados.inicio) || '');
     const h = hoje();
+    // Novo = entrou na lista no dia da coleta mais recente (não acumula os dias anteriores).
+    const diaColeta = st.dados && st.dados.atualizadoEm ? new Date(st.dados.atualizadoEm).toLocaleDateString('sv-SE', { timeZone: TZ }) : '';
     const out = [];
     for (const id of Object.keys(im)) {
       const x = im[id];
@@ -198,8 +200,8 @@
         rua: caso(x.r), b: x.b === 'S' ? 'S' : 'N', t: String(x.t || ''), an: String(x.an || ''), pu: String(x.pu || ''),
         d: String(x.d || ''), saiu: x.x ? String(x.x) : '', volta: x.rv ? String(x.rv) : '',
         m2: a ? p / a : Infinity, mud,
-        novo: !x.x && !!x.d && !!inicio && String(x.d) > inicio && dias(String(x.d), h) <= 7,
-        voltou: !x.x && !!x.rv && dias(String(x.rv), h) <= 7,
+        novo: !x.x && !!x.d && !!inicio && String(x.d) > inicio && String(x.d) === diaColeta,
+        voltou: !x.x && !!x.rv && String(x.rv) === diaColeta,
         fav: !!m.fav, oculto: !!m.oculto, nota: String(m.nota || '')
       });
     }
@@ -334,7 +336,7 @@
   function vazio(titulo, texto) { const li = el('li', 'vazio'); li.append(el('strong', null, titulo), texto); return li; }
   const MSG_VAZIO = {
     disp: ['Nenhum apartamento com esses filtros', 'Afrouxe algum filtro, aumente o limite de aluguel ou limpe a busca.'],
-    novos: ['Nenhum anúncio novo nos últimos 7 dias', 'Os que entrarem no site aparecem aqui depois da coleta diária.'],
+    novos: ['Nenhum anúncio novo na última coleta', 'Os que entrarem no site aparecem aqui depois da coleta diária.'],
     fav: ['Nenhum favorito', 'Use a estrela de um anúncio para guardá-lo aqui.'],
     notas: ['Nenhuma nota', 'Use o botão Nota de um anúncio para registrar contato, visita ou impressões.'],
     sairam: ['Nenhum anúncio saiu do site recentemente', 'Anúncios removidos ficam aqui por 45 dias.'],
